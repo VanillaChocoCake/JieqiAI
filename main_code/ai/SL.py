@@ -109,6 +109,9 @@ def supervised_learning(Msl, camp, sl_model, st, actions):
     :param sl_model: 监督学习模型
     :param Msl: 监督学习用的蓄水池采样缓存(st,at)
     :return: 平均策略Fs
+    :param camp: 阵营
+    :param st: 状态
+    :param actions: 所有合法行动
     需要随机梯度下降法
     """
     if camp == camp_red:
