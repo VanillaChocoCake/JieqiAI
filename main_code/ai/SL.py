@@ -5,7 +5,7 @@ from tensorflow.keras.layers import Input
 from tensorflow.keras.layers import Activation
 from tensorflow.keras.layers import Conv2D, Dense, MaxPooling2D, MaxPooling3D
 from tensorflow.keras.layers import add, BatchNormalization, Flatten
-from tensorflow.keras.losses import CategoricalCrossentropy, MeanSquaredError
+from tensorflow.keras.losses import BinaryCrossentropy, MeanSquaredError
 import tensorflow as tf
 import tensorflow.keras as keras
 from localtime import localtime
@@ -66,7 +66,7 @@ def create_model():
     flatten = Flatten()(z)
     action = Dense(8100, activation="softmax")(flatten)
     model = Model(visible, action)
-    model.compile(optimizer='sgd', loss='mean_squared_error')
+    model.compile(optimizer='sgd', loss='binary_crossentropy')
     return model
 
 
