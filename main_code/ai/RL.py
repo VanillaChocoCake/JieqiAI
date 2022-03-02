@@ -51,7 +51,7 @@ class DQN:
         self.update_rate = 100
         self.update_count = 0
         self.target_model = copy.deepcopy(self.model)
-        self.model.summary()
+        # self.model.summary()
 
     def train(self, Mrl, batch_size=128):
         if self.camp == camp_red:
@@ -59,6 +59,9 @@ class DQN:
         else:
             mini_batch = random.sample(Mrl.black.rlmemory, batch_size)
         for st_prev, at_prev, rt, st, ct in mini_batch:
+            st_prev = np.array([st_prev])
+            np.reshape(at_prev, 8100)
+            st = np.array([st])
             if ct != 0:
                 target = rt + self.gamma * np.max(self.target_model.predict(st))
             else:

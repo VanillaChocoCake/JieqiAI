@@ -13,7 +13,7 @@ client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 host = "127.0.0.1"
 port = 2022
 client.connect((host, port))
-"""
+
 while True:
     turn = camp_red
     game_round = 0
@@ -28,6 +28,8 @@ while True:
         game_round += 1
         board_info = client.recv(2048)
         message = board_info.decode("utf-8").split(" ")
+        if "黑未红未" in message or len(message) != 90:
+            print(1)
         board = translate_message(message)
         for i in range(0, len(board)):
             for j in range(0, len(board[0])):
@@ -66,7 +68,6 @@ while True:
                     res = [st_1, at_1, 1, st, done]
                     res = tuple(res)
                     pickle.dump(res, Mrl_black)
-            client.send(decision.encode("utf-8"))
             break
         if len(red_actions) == 0 or len(black_actions) == 0:
             decision = "end"
@@ -105,18 +106,15 @@ while True:
         if turn == camp_red:
             with open("Msl_red.buf", "ab+") as Msl_red:
                 num = random.uniform(0, 1)
-                if num <= 0.2:
+                if num <= 0.2 and game_round > 1:
                     res = [st, at]
                     res = tuple(res)
                     pickle.dump(res, Msl_red)
-
             with open("Mrl_red.buf", "ab+") as Mrl_red:
-                num = random.uniform(0, 1)
-                if num <= 0.02 and game_round > 1:
+                if game_round > 1:
                     res = [st_1, at_1, random.uniform(-1, 1), st, done]
                     res = tuple(res)
                     pickle.dump(res, Mrl_red)
-
             turn = camp_black
         else:
             with open("Msl_black.buf", "ab+") as Msl_black:
@@ -127,21 +125,17 @@ while True:
                     pickle.dump(res, Msl_black)
 
             with open("Mrl_black.buf", "ab+") as Mrl_black:
-                num = random.uniform(0, 1)
-                if num <= 0.02 and game_round > 1:
+                if game_round > 1:
                     res = [st_1, at_1, random.uniform(-1, 1), st, done]
                     res = tuple(res)
                     pickle.dump(res, Mrl_black)
-
             turn = camp_red
-        if decision == "end":
-            break
         st_1 = st
         at_1 = at
         client.send(decision.encode("utf-8"))
         chess_num_prev = chess_num_now
-        # time.sleep(1)
+        time.sleep(0.5)
 client.close()
-"""
+
 
 # TODO：AI核心代码

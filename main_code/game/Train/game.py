@@ -50,9 +50,6 @@ while True:
         if decision == "end":
             print("本局结束")
             break
-        elif decision == "quit":
-            print("终止")
-            break
         decision = decision.split(" ")
         decision = string_to_int(decision)
         src = [decision[0], decision[1]]
@@ -61,8 +58,6 @@ while True:
         # 更新棋盘开始
         board, red_info, black_info = update_board(src, dst, board, red_info, black_info)
         # 更新棋盘结束
-    if decision == "quit":
-        break
 socket_server.close()
 
 
