@@ -28,8 +28,6 @@ while True:
         game_round += 1
         board_info = client.recv(2048)
         message = board_info.decode("utf-8").split(" ")
-        if "黑未红未" in message or len(message) != 90:
-            print(1)
         board = translate_message(message)
         for i in range(0, len(board)):
             for j in range(0, len(board[0])):
