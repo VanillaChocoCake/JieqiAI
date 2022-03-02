@@ -1,7 +1,9 @@
+import copy
 import random
 
 import numpy as np
 from tensorflow.keras import optimizers
+from tensorflow.keras.models import load_model
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Input
 from tensorflow.keras.layers import Activation
@@ -32,12 +34,16 @@ def create_model(learning_rate=0.1):
 
 
 class DQN:
-    def __init__(self, camp, learning_rate=0.1, model=None):
-        if model is None:
-            self.model = create_model(learning_rate)
-        else:
-            self.model = model
+    def __init__(self, camp, learning_rate=0.1):
+        self.learning_rate = learning_rate
         self.camp = camp
+        try:
+            if self.camp == camp_red:
+                self.model = load_model("rl_model_red.h5")
+            else:
+                self.model = load_model("rl_model_black.h5")
+        except:
+            self.model = create_model(self.learning_rate)
         self.gamma = 1.0
         self.epsilon = 0.2
         self.epsilon_min = 1e-6
@@ -45,7 +51,6 @@ class DQN:
         self.update_rate = 100
         self.update_count = 0
         self.target_model = copy.deepcopy(self.model)
-        self.target_model.set_weights(self.model.get_weights())
         self.model.summary()
 
     def train(self, Mrl, batch_size=128):
@@ -62,18 +67,7 @@ class DQN:
             target_prediction[0][np.argmax(at_prev)] = target
             self.model.fit(np.reshape(st_prev, (1, 10, 9, 16)), np.reshape(target_prediction, (1, 8100)), epochs=1,
                            verbose=0)
-        if self.camp == camp_red:
-            try:
-                os.rename("rl_model_red.h5", "rl_model_red " + localtime() + ".h5")
-            except:
-                pass
-            self.model.save_weights("rl_model_red.h5")
-        else:
-            try:
-                os.rename("rl_model_black.h5", "rl_model_black " + localtime() + ".h5")
-            except:
-                pass
-            self.model.save_weights("rl_model_black.h5")
+        self.save()
         self.update_count += 1
         if self.update_count > self.update_rate:
             self.update_target_model()
@@ -87,6 +81,20 @@ class DQN:
 
     def update_target_model(self):
         self.target_model.set_weights(self.model.get_weights())
+
+    def save(self):
+        if self.camp == camp_red:
+            try:
+                os.rename("rl_model_red.h5", "rl_model_red " + localtime() + ".h5")
+            except:
+                pass
+            self.model.save("rl_model_red.h5")
+        else:
+            try:
+                os.rename("rl_model_black.h5", "rl_model_black " + localtime() + ".h5")
+            except:
+                pass
+            self.model.save("rl_model_black.h5")
 
 
 def reinforcement_learning(Mrl, camp, dqn_agent, st, actions, batch_size=128):

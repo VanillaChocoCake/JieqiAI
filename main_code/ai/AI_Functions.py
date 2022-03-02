@@ -3,7 +3,6 @@ import copy
 import numpy as np
 from const import *
 
-
 normal_board = [["车", "马", "相", "仕", "帅", "仕", "相", "马", "车"],
                 ["空", "空", "空", "空", "空", "空", "空", "空", "空"],
                 ["空", "炮", "空", "空", "空", "空", "空", "炮", "空"],
@@ -563,6 +562,7 @@ def select_policy(predict_res, available_actions, camp):
     :param available_actions:可行行动，8100维
     :return:
     """
+
     def normalization(arr):
         base = np.max(abs(arr))
         return arr / base
@@ -574,6 +574,21 @@ def select_policy(predict_res, available_actions, camp):
         return np.argmax(predict_res)
     else:
         return np.argmin(predict_res)
+
+
+def chess_remain(board):
+    chess_num_now = 0
+    red_chess_num = 0
+    black_chess_num = 0
+    for i in range(0, len(board)):
+        for j in range(0, len(board[0])):
+            if board[i][j] != "空":
+                chess_num_now += 1
+                if camp(board[i][j]) == camp_red:
+                    red_chess_num += 1
+                else:
+                    black_chess_num += 1
+    return chess_num_now, red_chess_num, black_chess_num
 
 
 """
@@ -641,6 +656,3 @@ def reinforcement_learning(Mrl):
     :return:beta
     """
     return None
-
-
-

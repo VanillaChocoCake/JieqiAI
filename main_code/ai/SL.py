@@ -1,6 +1,6 @@
 # 监督学习与分类
 import numpy as np
-from tensorflow.keras.models import Model
+from tensorflow.keras.models import load_model, Model
 from tensorflow.keras import optimizers
 from tensorflow.keras.layers import Input
 from tensorflow.keras.layers import Activation
@@ -15,7 +15,7 @@ from const import *
 from AI_Functions import *
 
 
-def create_model():
+def create_model(learning_rate):
     def residual_module(layer_in, n_filters):
         merge_input = layer_in
         if layer_in.shape[-1] != n_filters:
@@ -25,6 +25,7 @@ def create_model():
         layer_out = add([batch_norm, merge_input])
         layer_out = Activation('relu')(layer_out)
         return layer_out
+
     visible = Input(shape=(10, 9, 16))
     x = residual_module(visible, 1024)
     maxpooling_x = MaxPooling2D()(x)
@@ -34,30 +35,39 @@ def create_model():
     flatten = Flatten()(z)
     final = Dense(512, activation="relu")(flatten)
     action = Dense(8100, activation="tanh")(final)
-    model = Model(visible, action)
-    sgd = optimizers.SGD(learning_rate=0.005)
+    model = Model(inputs=visible, outputs=action)
+    sgd = optimizers.SGD(learning_rate=learning_rate)
     model.compile(optimizer=sgd, loss='binary_crossentropy')
     return model
 
 
 class SLModel:
-    def __init__(self, model=None):
-        if model is None:
-            self.model = create_model()
-        else:
-            self.model = model
+    def __init__(self, camp, learning_rate=0.005):
+        self.learning_rate = learning_rate
+        self.camp = camp
+        try:
+            if self.camp == camp_red:
+                self.model = load_model("sl_model_red.h5")
+            else:
+                self.model = load_model("sl_model_black.h5")
+        except:
+            self.model = create_model(self.learning_rate)
 
     def predict(self, st):
         action = self.model.predict(st)[0]
-        """
-        while np.min(abs(action)) < 0.01:
-            action = action * 100
-        """
         return action
 
-    def train(self, st, at, camp, epochs=300):
+    def train(self, st, at, epochs=300):
+
         self.model.fit(st, at, epochs=epochs)
-        if camp == camp_red:
+        self.save()
+
+    def generate_figure(self):
+        from tensorflow.keras.utils import plot_model
+        plot_model(self.model, to_file="model " + localtime() + ".png")
+
+    def save(self):
+        if self.camp == camp_red:
             try:
                 os.rename("sl_model_red.h5", "sl_model_red " + localtime() + ".h5")
             except:
@@ -69,10 +79,6 @@ class SLModel:
             except:
                 pass
             self.model.save("sl_model_black.h5")
-
-    def generate_figure(self):
-        from tensorflow.keras.utils import plot_model
-        plot_model(self.model, to_file="model " + localtime() + ".png")
 
 
 def supervised_learning(Msl, camp, sl_model, st, actions):

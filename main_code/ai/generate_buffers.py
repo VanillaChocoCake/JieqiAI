@@ -143,10 +143,5 @@ while True:
         # time.sleep(1)
 client.close()
 """
-while True:
-    board_info = client.recv(2048)
-    message = board_info.decode("utf-8").split(" ")
-    board = translate_message(message)
-    decision = input("decison:")
-    client.send(decision.encode("utf-8"))
+
 # TODO：AI核心代码

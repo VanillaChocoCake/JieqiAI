@@ -24,9 +24,11 @@ from SL import *
 from Reservoir import Reservoir
 from RL import *
 from CircularBuffer import *
-actions = [[1, 2, 3, 4], [3, 2, 1, 7], [4, 2, 1, 9]]
-action = random.sample(actions, 1)
-print(action)
+red_sl_model = SLModel(camp=camp_red)
+black_sl_model = SLModel(camp=camp_black)
+red_agent = DQN(camp=camp_red)
+black_agent = DQN(camp=camp_black)
+print(1)
 """
 # train
 red_sl_model = SLModel()
