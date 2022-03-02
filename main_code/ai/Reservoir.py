@@ -102,8 +102,8 @@ class Black:
 
 
 class Reservoir:
-    def __init__(self):
-        self.maxsize = 3000
+    def __init__(self, maxsize=3000):
+        self.maxsize = maxsize
         self.red = Red(self.maxsize)
         self.black = Black(self.maxsize)
 

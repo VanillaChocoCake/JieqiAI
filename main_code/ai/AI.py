@@ -15,8 +15,8 @@ client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 host = "127.0.0.1"
 port = 201
 client.connect((host, port))
-red_sl_model = SLModel(models.load_model("sl_model_red.h5"))
-black_sl_model = SLModel(models.load_model("sl_model_black.h5"))
+red_sl_model = SLModel()
+black_sl_model = SLModel()
 while True:
     game_round = 0
     while True:

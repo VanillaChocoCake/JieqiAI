@@ -556,22 +556,24 @@ def convert_num_to_action(num):
     return src, dst
 
 
-def select_best_action(predict_res, available_actions):
+def select_policy(predict_res, available_actions, camp):
     """
     将输出结果中的不可行行动排除，随后进行归一化
     :param predict_res:模型输出的结果，8100维
     :param available_actions:可行行动，8100维
     :return:
     """
-
     def normalization(arr):
-        base = np.max(arr) - np.min(arr)
-        return (arr - np.min(arr)) / base
+        base = np.max(abs(arr))
+        return arr / base
 
     for i in range(0, len(predict_res)):
         predict_res[i] = predict_res[i] * available_actions[i]
     predict_res = normalization(predict_res)
-    return np.argmax(predict_res)
+    if camp == camp_red:
+        return np.argmax(predict_res)
+    else:
+        return np.argmin(predict_res)
 
 
 """

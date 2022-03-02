@@ -1,53 +1,93 @@
 # Mrl-环形缓存
 # 可能用不到了
 import pickle
-from queue import Queue
+from collections import deque
 import os
 from localtime import *
 import numpy as np
 from const import *
 
+# [st-1, at-1, rt, st, ct]
+class Red:
+    def __init__(self, maxsize):
+        self.maxsize = maxsize
+        self.save_count = 0
+        self.rlmemory = deque(maxlen=self.maxsize)
+        with open("Mrl_red.buf", "rb") as Mrl_red:
+            while self.rlmemory.__len__() < self.maxsize:
+                try:
+                    self.rlmemory.append(pickle.load(Mrl_red))
+                except:
+                    break
+
+    def save(self):
+        try:
+            os.rename("Mrl_red.buf", "Mrl_red " + localtime() + ".buf")
+        except:
+            pass
+        with open("Mrl_red.buf.buf", "wb") as Mrl_red:
+            while self.rlmemory.__len__() > 0:
+                tup = tuple(self.rlmemory.popleft())
+                pickle.dump(tup, Mrl_red)
+
+    def update(self, tup):
+        if self.rlmemory.__len__() < self.maxsize:
+            self.rlmemory.append(tup)
+        elif self.rlmemory.__len__() == self.maxsize:
+            self.rlmemory.popleft()
+            self.rlmemory.append(tup)
+        self.save_count += 1
+        if self.save_count > 100:
+            self.save()
+            self.save_count = 0
+
+
+class Black:
+    def __init__(self, maxsize):
+        self.maxsize = maxsize
+        self.save_count = 0
+        self.rlmemory = deque(maxlen=self.maxsize)
+        with open("Mrl_black.buf", "rb") as Mrl_black:
+            while self.rlmemory.__len__() < self.maxsize:
+                try:
+                    self.rlmemory.append(pickle.load(Mrl_black))
+                except:
+                    break
+
+    def save(self):
+        try:
+            os.rename("Mrl_black.buf", "Mrl_black " + localtime() + ".buf")
+        except:
+            pass
+        with open("Mrl_black.buf.buf", "wb") as Mrl_black:
+            while self.rlmemory.__len__() > 0:
+                tup = tuple(self.rlmemory.popleft())
+                pickle.dump(tup, Mrl_black)
+
+    def update(self, tup):
+        if self.rlmemory.__len__() < self.maxsize:
+            self.rlmemory.append(tup)
+        elif self.rlmemory.__len__() == self.maxsize:
+            self.rlmemory.popleft()
+            self.rlmemory.append(tup)
+        self.save_count += 1
+        if self.save_count > 100:
+            self.save()
+            self.save_count = 0
+
 
 class CircularBuffer:
-    def __init__(self):
-        self.maxsize = 300
-        self.red_rlmemory = Queue(maxsize=self.maxsize)
-        self.black_rlmemory = Queue(maxsize=self.maxsize)
-        with open("Mrl_red.buf", "rb") as Mrl_red:
-            while self.red_rlmemory.qsize() < self.maxsize:
-                try:
-                    self.red_rlmemory.put(pickle.load(Mrl_red))
-                except:
-                    break
-        with open("Mrl_black.buf", "rb") as Mrl_black:
-            while self.black_rlmemory.qsize() < self.maxsize:
-                try:
-                    self.black_rlmemory.put(pickle.load(Mrl_black))
-                except:
-                    break
+    def __init__(self, maxsize=1000):
+        self.maxsize = maxsize
+        self.red = Red(self.maxsize)
+        self.black = Black(self.maxsize)
 
     def update(self, tup, camp):
         if camp == camp_red:
-            if self.red_rlmemory.qsize() < self.maxsize:
-                self.red_rlmemory.put(tup)
-            elif self.red_rlmemory.qsize() == self.maxsize:
-                self.red_rlmemory.get()
-                self.red_rlmemory.put(tup)
+            self.red.update(tup)
         else:
-            if self.black_rlmemory.qsize() < self.maxsize:
-                self.black_rlmemory.put(tup)
-            elif self.black_rlmemory.qsize() == self.maxsize:
-                self.black_rlmemory.get()
-                self.black_rlmemory.put(tup)
+            self.black.update(tup)
 
     def save(self):
-        os.rename("Mrl_red.buf", "Mrl_red " + localtime() + ".buf")
-        os.rename("Mrl_black.buf", "Mrl_black " + localtime() + ".buf")
-        with open("Mrl_red.buf.buf", "wb") as Mrl_red:
-            while self.red_rlmemory.qsize() > 0:
-                tup = tuple(self.red_rlmemory.get())
-                pickle.dump(tup, Mrl_red)
-        with open("Mrl_black.buf.buf", "wb") as Mrl_black:
-            while self.black_rlmemory.qsize() > 0:
-                tup = tuple(self.black_rlmemory.get())
-                pickle.dump(tup, Mrl_black)
+        self.red.save()
+        self.black.save()

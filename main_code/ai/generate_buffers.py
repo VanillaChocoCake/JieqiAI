@@ -13,11 +13,13 @@ client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 host = "127.0.0.1"
 port = 2022
 client.connect((host, port))
+"""
 while True:
     turn = camp_red
     game_round = 0
     chess_num_now = chess_num_prev = 0
     no_eat_round = 0
+    done = 1
     while True:
         print("********************************")
         chess_num_now = 0
@@ -49,17 +51,44 @@ while True:
         print("无吃子回合：", no_eat_round)
         red_actions, black_actions = available_actions(board)
         # 这里是决策
+        if game_round / 2 >= 500 or no_eat_round >= 40:
+            decision = "end"
+            print("回合过多")
+            client.send(decision.encode("utf-8"))
+            done = 0
+            with open("Mrl_red.buf", "ab+") as Mrl_red:
+                if game_round > 1:
+                    res = [st_1, at_1, -1, st, done]
+                    res = tuple(res)
+                    pickle.dump(res, Mrl_red)
+            with open("Mrl_black.buf", "ab+") as Mrl_black:
+                if game_round > 1:
+                    res = [st_1, at_1, 1, st, done]
+                    res = tuple(res)
+                    pickle.dump(res, Mrl_black)
+            client.send(decision.encode("utf-8"))
+            break
         if len(red_actions) == 0 or len(black_actions) == 0:
             decision = "end"
             if len(red_actions) == 0:
                 print("红方困毙")
-            elif len(black_actions) == 0:
+                reward = -1
+            else:
                 print("黑方困毙")
-            client.send(decision.encode("utf-8"))
-            break
-        elif game_round / 2 >= 500 or no_eat_round >= 40:
-            decision = "end"
-            print("回合过多")
+                reward = 1
+            done = 0
+            if turn == camp_red:
+                with open("Mrl_red.buf", "ab+") as Mrl_red:
+                    if game_round > 1 and done != 0:
+                        res = [st_1, at_1, reward, st, done]
+                        res = tuple(res)
+                        pickle.dump(res, Mrl_red)
+            else:
+                with open("Mrl_black.buf", "ab+") as Mrl_black:
+                    if game_round > 1 and done != 0:
+                        res = [st_1, at_1, reward, st, done]
+                        res = tuple(res)
+                        pickle.dump(res, Mrl_black)
             client.send(decision.encode("utf-8"))
             break
         if turn == camp_red:
@@ -80,14 +109,14 @@ while True:
                     res = [st, at]
                     res = tuple(res)
                     pickle.dump(res, Msl_red)
-            """
+
             with open("Mrl_red.buf", "ab+") as Mrl_red:
                 num = random.uniform(0, 1)
                 if num <= 0.02 and game_round > 1:
-                    res = [st_1, at_1, random.uniform(-1, 1), st]
+                    res = [st_1, at_1, random.uniform(-1, 1), st, done]
                     res = tuple(res)
                     pickle.dump(res, Mrl_red)
-            """
+
             turn = camp_black
         else:
             with open("Msl_black.buf", "ab+") as Msl_black:
@@ -96,20 +125,28 @@ while True:
                     res = [st, at]
                     res = tuple(res)
                     pickle.dump(res, Msl_black)
-            """
+
             with open("Mrl_black.buf", "ab+") as Mrl_black:
                 num = random.uniform(0, 1)
                 if num <= 0.02 and game_round > 1:
-                    res = [st_1, at_1, random.uniform(-1, 1), st]
+                    res = [st_1, at_1, random.uniform(-1, 1), st, done]
                     res = tuple(res)
                     pickle.dump(res, Mrl_black)
-            """
+
             turn = camp_red
+        if decision == "end":
+            break
         st_1 = st
         at_1 = at
         client.send(decision.encode("utf-8"))
         chess_num_prev = chess_num_now
         # time.sleep(1)
 client.close()
-
+"""
+while True:
+    board_info = client.recv(2048)
+    message = board_info.decode("utf-8").split(" ")
+    board = translate_message(message)
+    decision = input("decison:")
+    client.send(decision.encode("utf-8"))
 # TODO：AI核心代码

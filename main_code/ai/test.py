@@ -1,4 +1,6 @@
+import collections
 import copy
+import random
 
 import numpy as np
 from tensorflow.keras import models
@@ -20,16 +22,23 @@ import os
 from const import *
 from SL import *
 from Reservoir import Reservoir
-
+from RL import *
+from CircularBuffer import *
+actions = [[1, 2, 3, 4], [3, 2, 1, 7], [4, 2, 1, 9]]
+action = random.sample(actions, 1)
+print(action)
 """
 # train
-red_model = SLModel()
+red_sl_model = SLModel()
 Msl = Reservoir()
-red_model.train(Msl.red.st, Msl.red.at, camp_red, epochs=100)
+red_sl_model.train(Msl.red.st, Msl.red.at, camp_red, epochs=100)
+black_sl_model = SLModel()
+black_sl_model.train(Msl.black.st, Msl.black.at, camp_black, epochs=100)
 """
-
+"""
 # test
-red_model = SLModel(model=models.load_model("sl_model_red.h5"))
+# red_model = SLModel(model=models.load_model("sl_model_red.h5"))
+red_model = SLModel()
 temp = []
 with open("st.data", "rb") as data:
     while True:
@@ -49,9 +58,14 @@ at = copy.deepcopy(temp[2])
 action = [1, 6, 3, 4]
 all_act = copy.deepcopy(temp[4])
 st = np.array([st])
-src, dst = supervised_learning(Msl=Msl, camp=camp_red, actions=all_act, sl_model=red_model, st=st)
-print(src, "->", dst)
-
+predict = red_model.predict(st)
+available_policy = np.zeros(8100)
+available_policy = convert_action_to_array(all_act, available_policy)
+average_policy = select_best_action(predict, available_policy)
+src, dst = convert_num_to_action(average_policy)
+# src, dst = supervised_learning(Msl=Msl, camp=camp_red, actions=all_act, sl_model=red_model, st=st)
+# print(src, "->", dst)
+"""
 """
 board = generate_board()
 board = list_to_string(board)

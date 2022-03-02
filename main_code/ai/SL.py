@@ -1,6 +1,7 @@
 # 监督学习与分类
 import numpy as np
 from tensorflow.keras.models import Model
+from tensorflow.keras import optimizers
 from tensorflow.keras.layers import Input
 from tensorflow.keras.layers import Activation
 from tensorflow.keras.layers import Conv2D, Dense, MaxPooling2D, MaxPooling3D
@@ -24,49 +25,18 @@ def create_model():
         layer_out = add([batch_norm, merge_input])
         layer_out = Activation('relu')(layer_out)
         return layer_out
-
-    """
-    visible = Input(shape=(10, 9, 16))
-    layer1 = residual_module(visible, 64)
-    maxpool1 = MaxPooling2D()(layer1)
-    layer2 = residual_module(maxpool1, 128)
-    maxpool2 = MaxPooling2D()(layer2)
-    layer3 = residual_module(maxpool2, 256)
-    maxpool3 = MaxPooling2D()(layer3)
-    layer4 = residual_module(maxpool3, 512)
-    flatten = Flatten()(layer4)
-
-    visible = Input(shape=(10, 9, 16))
-
-    action = Dense(170, activation='gelu', name='action')(flatten)
-    model = Model(inputs=visible, outputs=action)
-    """
-    """
-    model = keras.models.Sequential([keras.layers.Dense(1024, activation="relu", input_shape=(10, 9, 16)),
-                                     keras.layers.Dense(512, activation="relu"),
-                                     keras.layers.Dense(1024, activation="relu"),
-                                     keras.layers.Dense(512, activation="relu"),
-                                     keras.layers.Dense(170, activation="softmax")])
-    """
     visible = Input(shape=(10, 9, 16))
     x = residual_module(visible, 1024)
     maxpooling_x = MaxPooling2D()(x)
-    # x = Dense(1024, input_shape=(10, 9, 16), activation="relu")(visible)
     y = residual_module(maxpooling_x, 512)
     maxpooling_y = MaxPooling2D()(y)
     z = Dense(1024, activation="relu")(maxpooling_y)
-    # z = residual_module(maxpooling_y, 1024)
-    # maxpooling_y = MaxPooling2D()(y)
-    # y = Dense(512, activation="relu")(x)
-    # z = residual_module(maxpooling_y, 1024)
-    # maxpooling_z = MaxPooling2D()(z)
-    # z = Dense(1024, activation="relu")(y)
-    # m = residual_module(maxpooling_z, 512)
-    # m = Dense(512, activation="relu")(z)
     flatten = Flatten()(z)
-    action = Dense(8100, activation="softmax")(flatten)
+    final = Dense(512, activation="relu")(flatten)
+    action = Dense(8100, activation="tanh")(final)
     model = Model(visible, action)
-    model.compile(optimizer='sgd', loss='binary_crossentropy')
+    sgd = optimizers.SGD(learning_rate=0.005)
+    model.compile(optimizer=sgd, loss='binary_crossentropy')
     return model
 
 
@@ -79,12 +49,14 @@ class SLModel:
 
     def predict(self, st):
         action = self.model.predict(st)[0]
-        while np.min(action) < 0.01:
+        """
+        while np.min(abs(action)) < 0.01:
             action = action * 100
+        """
         return action
 
     def train(self, st, at, camp, epochs=300):
-        self.model.fit(st, at, epochs=epochs, batch_size=128)
+        self.model.fit(st, at, epochs=epochs)
         if camp == camp_red:
             try:
                 os.rename("sl_model_red.h5", "sl_model_red " + localtime() + ".h5")
@@ -121,6 +93,6 @@ def supervised_learning(Msl, camp, sl_model, st, actions):
     average_policy = sl_model.predict(st)
     available_policy = np.zeros(8100)
     available_policy = convert_action_to_array(actions, available_policy)
-    average_policy = select_best_action(average_policy, available_policy)
+    average_policy = select_policy(average_policy, available_policy, camp)
     src, dst = convert_num_to_action(average_policy)
     return src, dst
