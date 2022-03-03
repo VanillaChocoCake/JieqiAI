@@ -49,7 +49,7 @@ class Red:
             num = random.randint(0, self.maxsize - 1)
             self.slmemory[num] = tup
         self.save_count += 1
-        if self.save_count > 10:
+        if self.save_count > 50:
             self.save()
             self.save_count = 0
 
@@ -96,7 +96,7 @@ class Black:
             num = random.randint(0, self.maxsize - 1)
             self.slmemory[num] = tup
         self.save_count += 1
-        if self.save_count > 10:
+        if self.save_count > 50:
             self.save()
             self.save_count = 0
 

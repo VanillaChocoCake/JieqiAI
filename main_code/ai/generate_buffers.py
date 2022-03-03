@@ -1,13 +1,10 @@
 # as client
 # 生成初始的Msl
-import copy
 import pickle
-import random
 import socket
 import time
 
 from AI_Functions import *
-import numpy as np
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 host = "127.0.0.1"

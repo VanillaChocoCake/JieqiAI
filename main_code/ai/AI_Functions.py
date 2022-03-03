@@ -2,6 +2,7 @@
 import copy
 import numpy as np
 from const import *
+import random
 
 normal_board = [["车", "马", "相", "仕", "帅", "仕", "相", "马", "车"],
                 ["空", "空", "空", "空", "空", "空", "空", "空", "空"],
@@ -546,21 +547,25 @@ def convert_action_to_array(action, available_action_array=None):
 
 
 def convert_num_to_action(num):
+    """
+    num: 下标(0 ~ 8099)
+    return: string "a b c d"
+    """
     src = [0, 0]
     dst = [0, 0]
     src[0] = int(int(num / 90) / 9)
     src[1] = int(num / 90) - 9 * src[0]
     dst[0] = int((num - 90 * int(num / 90)) / 9)
     dst[1] = num - 90 * int(num / 90) - 9 * dst[0]
-    return src, dst
+    return str(src[0]) + " " + str(src[1]) + " " + str(dst[0]) + " " + str(dst[1])
 
 
-def select_policy(predict_res, available_actions, camp):
+def generate_policy(predict_res, available_actions):
     """
     将输出结果中的不可行行动排除，随后进行归一化
     :param predict_res:模型输出的结果，8100维
     :param available_actions:可行行动，8100维
-    :return:
+    :return:8100维数列
     """
 
     def normalization(arr):
@@ -570,10 +575,7 @@ def select_policy(predict_res, available_actions, camp):
     for i in range(0, len(predict_res)):
         predict_res[i] = predict_res[i] * available_actions[i]
     predict_res = normalization(predict_res)
-    if camp == camp_red:
-        return np.argmax(predict_res)
-    else:
-        return np.argmin(predict_res)
+    return predict_res
 
 
 def chess_remain(board):
@@ -591,68 +593,21 @@ def chess_remain(board):
     return chess_num_now, red_chess_num, black_chess_num
 
 
-"""
-def convert_action_to_array(action):
-    # 将行动翻译为供训练用的状态空间，状态空间有170位；
-    # 前90位为取得棋子的位置；
-    # 之后72位由八个方向（北，东北，东，东南，南，西南，西，西北）分别对应9位可选距离组成（走一格位0，走三格为2）；
-    # 最后8位对应马的8步，顺序为从北开始的顺时针。
-    # :param action: 形式为[a,b,c,d,string]的行动
-    # :return: 形式为[0,...,0,1,0,...,0,1,0,...0]的行动
-    pos = np.zeros(90)
-    direction_stride_normal = np.zeros(72)
-    direction_stride_special = np.zeros(8)
-    src = [action[0], action[1]]
-    dst = [action[2], action[3]]
-    pos[src[0] * 9 + src[1]] = 1
-    if src[0] - dst[0] == 2 and dst[1] - src[1] == 1:
-        direction_stride_special[0] = 1
-    elif src[0] - dst[0] == 1 and dst[1] - src[1] == 2:
-        direction_stride_special[1] = 1
-    elif dst[0] - src[0] == 1 and dst[1] - src[1] == 2:
-        direction_stride_special[2] = 1
-    elif dst[0] - src[0] == 2 and dst[1] - src[1] == 1:
-        direction_stride_special[3] = 1
-    elif dst[0] - src[0] == 2 and src[1] - dst[1] == 1:
-        direction_stride_special[4] = 1
-    elif dst[0] - src[0] == 1 and src[1] - dst[1] == 2:
-        direction_stride_special[5] = 1
-    elif src[0] - dst[0] == 1 and src[1] - dst[1] == 2:
-        direction_stride_special[6] = 1
-    elif src[0] - dst[0] == 2 and src[1] - dst[1] == 1:
-        direction_stride_special[7] = 1
-    elif src[0] > dst[0] and src[1] == dst[1]:  # N
-        direction_stride_normal[src[0] - dst[0] - 1] = 1
-    elif src[0] > dst[0] and src[1] < dst[1]:  # NE
-        direction_stride_normal[9 + src[0] - dst[0] - 1] = 1
-    elif src[0] == dst[0] and src[1] < dst[1]:  # E
-        direction_stride_normal[18 + src[0] - dst[0] - 1] = 1
-    elif src[0] < dst[0] and src[1] < dst[1]:  # SE
-        direction_stride_normal[27 + src[0] - dst[0] - 1] = 1
-    elif src[0] < dst[0] and src[1] == dst[1]:  # S
-        direction_stride_normal[36 + src[0] - dst[0] - 1] = 1
-    elif src[0] < dst[0] and src[1] > dst[1]:  # SW
-        direction_stride_normal[45 + src[0] - dst[0] - 1] = 1
-    elif src[0] == dst[0] and src[1] > dst[1]:  # W
-        direction_stride_normal[54 + src[0] - dst[0] - 1] = 1
-    elif src[0] > dst[0] and src[1] > dst[1]:  # NW
-        direction_stride_normal[63 + src[0] - dst[0] - 1] = 1
-    pos = list(pos)
-    direction_stride_normal = list(direction_stride_normal)
-    direction_stride_special = list(direction_stride_special)
-    res = []
-    res.extend(pos)
-    res.extend(direction_stride_normal)
-    res.extend(direction_stride_special)
-    res = np.array(res)
-    return res
-"""
+def random_action(actions):
+    """
+    actions: [a, b, c, d, e]
+    return: dim=8100
+    """
+    random_policy = random.sample(actions, 1)[0]
+    random_policy = convert_action_to_array(random_policy)
+    return random_policy
 
 
-def reinforcement_learning(Mrl):
+def convert_num_to_array(num):
     """
-    强化学习
-    :param Mrl:强化学习用的环形缓存(st-1,at-1,rt,st,ct)
-    :return:beta
+    num: 下标
+    return: dim=8100
     """
-    return None
+    arr = np.zeros(8100)
+    arr[num] = 1
+    return arr
