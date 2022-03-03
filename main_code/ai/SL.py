@@ -31,7 +31,7 @@ def create_model(learning_rate):
     z = Dense(1024, activation="relu")(maxpooling_y)
     flatten = Flatten()(z)
     final = Dense(512, activation="relu")(flatten)
-    action = Dense(8100, activation="tanh")(final)
+    action = Dense(8100, activation="softmax")(final)
     model = Model(inputs=visible, outputs=action)
     sgd = optimizers.SGD(learning_rate=learning_rate)
     model.compile(optimizer=sgd, loss='binary_crossentropy')

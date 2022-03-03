@@ -593,14 +593,17 @@ def chess_remain(board):
     return chess_num_now, red_chess_num, black_chess_num
 
 
-def random_action(actions):
+def random_action(actions, camp):
     """
     actions: [a, b, c, d, e]
     return: dim=8100
     """
     random_policy = random.sample(actions, 1)[0]
     random_policy = convert_action_to_array(random_policy)
-    return random_policy
+    if camp == camp_red:
+        return random_policy
+    else:
+        return -random_policy
 
 
 def convert_num_to_array(num):
