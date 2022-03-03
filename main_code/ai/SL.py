@@ -99,4 +99,7 @@ def supervised_learning(Msl, camp, sl_model, st, actions):
     available_policy = convert_action_to_array(actions, available_policy)
     average_policy = generate_policy(average_policy, available_policy)
     # src, dst = convert_num_to_action(average_policy)
-    return average_policy
+    if camp == camp_red:
+        return average_policy
+    else:
+        return -average_policy

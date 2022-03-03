@@ -38,7 +38,7 @@ class DQN:
         except:
             self.model = create_model(self.learning_rate)
         self.gamma = 1.0
-        self.epsilon = 0.2
+        self.epsilon = 0.1
         self.epsilon_min = 1e-6
         self.epsilon_decay = 0.995
         self.update_rate = 300
@@ -109,9 +109,13 @@ def reinforcement_learning(Mrl, camp, dqn_agent, st, actions, batch_size=128):
         dqn_agent.train(Mrl)
     elif camp == camp_black and len(Mrl.black.rlmemory) > batch_size:
         dqn_agent.train(Mrl)
-    random_policy = random_action(actions)
+    random_policy = random_action(actions=actions)
     st = np.array([st])
     best_policy = dqn_agent.predict(st)
+    random_policy = np.multiply(random_policy, best_policy)
+    for i in range(0, len(random_policy)):
+        if random_policy[i] != 0:
+            random_policy[i] = random_policy[i] / abs(random_policy[i])
     available_policy = np.zeros(8100)
     available_policy = convert_action_to_array(actions, available_policy)
     beta = generate_policy(best_policy, available_policy)

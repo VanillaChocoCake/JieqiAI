@@ -132,7 +132,7 @@ while True:
                     Msl.update(tup=tup, camp=camp_black)
                 decision = convert_num_to_action(action)
         if done == not_end and game_round == 1 and turn == camp_red:
-            at = random_action(red_actions)
+            at = random_action(actions=red_actions)
             decision = convert_num_to_action(np.argmax(at))
         if game_round > 1:
             st_2 = st_1
