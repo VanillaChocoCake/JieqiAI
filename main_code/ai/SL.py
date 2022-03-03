@@ -43,7 +43,7 @@ class SLModel:
         self.learning_rate = learning_rate
         self.camp = camp
         self.save_count = 0
-        self.save_rate = 100
+        self.save_rate = 20
         try:
             if self.camp == camp_red:
                 self.model = load_model("sl_model_red.h5")
@@ -57,7 +57,6 @@ class SLModel:
         return action
 
     def train(self, st, at, epochs=300):
-
         self.model.fit(st, at, epochs=epochs)
         self.save_count += 1
         if self.save_count > self.save_rate:

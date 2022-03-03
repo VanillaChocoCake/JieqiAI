@@ -1,5 +1,5 @@
 import os
-
+import copy
 from tensorflow.keras import optimizers
 from tensorflow.keras.layers import Conv2D, Dense, MaxPooling2D
 from tensorflow.keras.layers import Flatten
@@ -44,8 +44,9 @@ class DQN:
         self.update_rate = 300
         self.update_count = 0
         self.save_count = 0
-        self.save_rate = 100
-        self.target_model = copy.deepcopy(self.model)
+        self.save_rate = 20
+        self.target_model = create_model(learning_rate=self.learning_rate)
+        self.target_model.set_weights(self.model.get_weights())
         # self.model.summary()
 
     def train(self, Mrl, batch_size=128):
