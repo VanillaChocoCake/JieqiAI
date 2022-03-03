@@ -2,8 +2,6 @@
 # AI主程序
 import socket
 
-import numpy as np
-
 from CircularBuffer import CircularBuffer
 from RL import *
 from Reservoir import Reservoir
@@ -99,8 +97,9 @@ while True:
                                              st=st,
                                              actions=red_actions)
                 sigma_red = (1 - eta) * pi_red + eta * beta_red
+                plot(beta_red, pi_red, sigma_red)
                 # sigma dim=8100
-                tup = (st_1, at_1, sigma_red[np.argmax(sigma_red)], st, done)
+                # tup = (st_1, at_1, sigma_red[np.argmax(sigma_red)], st, done)
                 Mrl.update(tup=tup, camp=camp_red)
                 action = np.argmax(sigma_red)
                 # action 0 ~ 8099
@@ -123,7 +122,8 @@ while True:
                                                st=st,
                                                actions=black_actions)
                 sigma_black = (1 - eta) * pi_black + eta * beta_black
-                tup = (st_1, at_1, sigma_black[np.argmin(sigma_black)], st, done)
+                plot(beta_black, pi_black, sigma_black)
+                # tup = (st_1, at_1, sigma_black[np.argmin(sigma_black)], st, done)
                 Mrl.update(tup=tup, camp=camp_black)
                 action = np.argmin(sigma_black)
                 at = convert_num_to_array(action)

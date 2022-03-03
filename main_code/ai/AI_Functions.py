@@ -3,6 +3,7 @@ import copy
 import numpy as np
 from const import *
 import random
+import matplotlib.pyplot as plt
 
 normal_board = [["车", "马", "相", "仕", "帅", "仕", "相", "马", "车"],
                 ["空", "空", "空", "空", "空", "空", "空", "空", "空"],
@@ -567,17 +568,14 @@ def generate_policy(predict_res, available_actions):
     :param available_actions:可行行动，8100维
     :return:8100维数列
     """
-
-    def normalization(arr):
-        base = np.max(abs(arr))
-        return arr / base
     res = np.multiply(predict_res, available_actions)
-    res = normalization(res)
-    """
-    for i in range(0, len(predict_res)):
-        predict_res[i] = predict_res[i] * available_actions[i]
-    predict_res = normalization(predict_res)
-    """
+    pos_sum = (sum(res) + sum(abs(res))) / 2
+    neg_sum_abs = abs(sum(res) - pos_sum)
+    for i in range(0, len(res)):
+        if res[i] > 1e-6:
+            res[i] = res[i] / pos_sum
+        elif res[i] < -1e-6:
+            res[i] = res[i] / neg_sum_abs
     return res
 
 
@@ -614,3 +612,13 @@ def convert_num_to_array(num):
     arr = np.zeros(8100)
     arr[num] = 1
     return arr
+
+
+def plot(beta, pi, sigma):
+    x = np.arange(len(beta))
+    plt.subplot(3, 1, 1)
+    plt.plot(x, beta)
+    plt.subplot(3, 1, 2)
+    plt.plot(x, pi)
+    plt.subplot(3, 1, 3)
+    plt.plot(x, sigma)

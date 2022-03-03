@@ -43,6 +43,8 @@ class DQN:
         self.epsilon_decay = 0.995
         self.update_rate = 300
         self.update_count = 0
+        self.save_count = 0
+        self.save_rate = 100
         self.target_model = copy.deepcopy(self.model)
         # self.model.summary()
 
@@ -71,11 +73,14 @@ class DQN:
                            np.reshape(target_prediction, (1, 8100)),
                            epochs=1,
                            verbose=0)
-        self.save()
         self.update_count += 1
+        self.save_count += 1
         if self.update_count > self.update_rate:
             self.update_target_model()
             self.update_count = 0
+        if self.save_count > self.save_rate:
+            self.save()
+            self.save_count = 0
 
     def predict(self, st):
         action = self.model.predict(st)[0]
@@ -120,7 +125,7 @@ def reinforcement_learning(Mrl, camp, dqn_agent, st, actions, batch_size=128):
     available_policy = convert_action_to_array(actions, available_policy)
     beta = generate_policy(best_policy, available_policy)
     num = random.uniform(0, 1)
-    if num < dqn_agent.epsilon:
+    if num > dqn_agent.epsilon:
         return beta
     else:
         return random_policy
