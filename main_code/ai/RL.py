@@ -66,7 +66,10 @@ class DQN:
                 else:
                     target = rt
             target_prediction = self.model.predict(st_prev)
-            target_prediction[0][np.argmax(at_prev)] = target
+            if self.camp == camp_red:
+                target_prediction[0][np.argmax(at_prev)] = target
+            else:
+                target_prediction[0][np.argmin(at_prev)] = target
             self.model.fit(np.reshape(st_prev, (1, 10, 9, 16)),
                            np.reshape(target_prediction, (1, 8100)),
                            epochs=1,
