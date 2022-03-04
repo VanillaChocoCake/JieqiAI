@@ -10,6 +10,7 @@
 # 在游戏端并不考虑这个走法是否合理，所有的判断均在ai端完成\
 # AI vs AI
 # 强化学习训练用的游戏文件
+import copy
 import socket
 import random
 from GAME_Functions import *
@@ -39,8 +40,8 @@ Black_State = {"黑车1": True, "黑车2": True,
 
 while True:
     board = generate_board()
-    red_info = Red_State.copy()
-    black_info = Black_State.copy()
+    red_info = copy.deepcopy(Red_State)
+    black_info = copy.deepcopy(Black_State)
     # 新建棋盘
     while True:
         chessboard = print_board(board, red_info, black_info)
