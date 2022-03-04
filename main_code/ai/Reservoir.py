@@ -14,16 +14,19 @@ class Red:
         self.st = []
         self.at = []
         self.save_count = 0
-        with open("Msl_red.buf", "rb") as Msl_red:
-            while True:
-                try:
-                    if len(self.slmemory) < self.maxsize:
-                        self.slmemory.append(pickle.load(Msl_red))
-                    else:
-                        num = random.randint(0, self.maxsize - 1)
-                        self.slmemory[num] = pickle.load(Msl_red)
-                except:
-                    break
+        try:
+            with open("Msl_red.buf", "rb") as Msl_red:
+                while True:
+                    try:
+                        if len(self.slmemory) < self.maxsize:
+                            self.slmemory.append(pickle.load(Msl_red))
+                        else:
+                            num = random.randint(0, self.maxsize - 1)
+                            self.slmemory[num] = pickle.load(Msl_red)
+                    except:
+                        break
+        except:
+            pass
         for i in range(0, len(self.slmemory)):
             self.st.append(self.slmemory[i][0])
             self.at.append(self.slmemory[i][1])
@@ -45,9 +48,17 @@ class Red:
             self.slmemory = list(self.slmemory)
             self.slmemory.append(tup)
             self.slmemory = np.array(self.slmemory)
+            self.st = list(self.st)
+            self.st.append(tup[0])
+            self.st = np.array(self.st)
+            self.at = list(self.at)
+            self.at.append(tup[1])
+            self.at = np.array(self.at)
         else:
             num = random.randint(0, self.maxsize - 1)
             self.slmemory[num] = tup
+            self.st[num] = tup[0]
+            self.at[num] = tup[1]
         self.save_count += 1
         if self.save_count > 50:
             self.save()
@@ -61,16 +72,19 @@ class Black:
         self.st = []
         self.at = []
         self.save_count = 0
-        with open("Msl_black.buf", "rb") as Msl_black:
-            while True:
-                try:
-                    if len(self.slmemory) < self.maxsize:
-                        self.slmemory.append(pickle.load(Msl_black))
-                    else:
-                        num = random.randint(0, self.maxsize - 1)
-                        self.slmemory[num] = pickle.load(Msl_black)
-                except:
-                    break
+        try:
+            with open("Msl_black.buf", "rb") as Msl_black:
+                while True:
+                    try:
+                        if len(self.slmemory) < self.maxsize:
+                            self.slmemory.append(pickle.load(Msl_black))
+                        else:
+                            num = random.randint(0, self.maxsize - 1)
+                            self.slmemory[num] = pickle.load(Msl_black)
+                    except:
+                        break
+        except:
+            pass
         for i in range(0, len(self.slmemory)):
             self.st.append(self.slmemory[i][0])
             self.at.append(self.slmemory[i][1])
@@ -92,9 +106,17 @@ class Black:
             self.slmemory = list(self.slmemory)
             self.slmemory.append(tup)
             self.slmemory = np.array(self.slmemory)
+            self.st = list(self.st)
+            self.st.append(tup[0])
+            self.st = np.array(self.st)
+            self.at = list(self.at)
+            self.at.append(tup[1])
+            self.at = np.array(self.at)
         else:
             num = random.randint(0, self.maxsize - 1)
             self.slmemory[num] = tup
+            self.st[num] = tup[0]
+            self.at[num] = tup[1]
         self.save_count += 1
         if self.save_count > 50:
             self.save()

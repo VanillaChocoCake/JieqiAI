@@ -22,7 +22,8 @@ def create_model(learning_rate=0.1):
     model.add(Dense(512, activation="relu"))
     model.add(Dense(8100, activation="tanh"))
     sgd = optimizers.SGD(learning_rate=learning_rate)
-    model.compile(optimizer=sgd, loss='binary_crossentropy')
+    # model.compile(optimizer=sgd, loss='binary_crossentropy')
+    model.compile(optimizer=sgd, loss='mean_squared_error')
     return model
 
 
@@ -40,8 +41,8 @@ class DQN:
         self.gamma = 1.0
         self.epsilon = 0.1
         self.epsilon_min = 1e-6
-        self.epsilon_decay = 0.995
-        self.update_rate = 300
+        self.epsilon_decay = 0.999
+        self.update_rate = 100
         self.update_count = 0
         self.save_count = 0
         self.save_rate = 20
@@ -72,8 +73,7 @@ class DQN:
             target_prediction[0][np.argmax(at_prev)] = target
             self.model.fit(np.reshape(st_prev, (1, 10, 9, 16)),
                            np.reshape(target_prediction, (1, 8100)),
-                           epochs=1,
-                           verbose=0)
+                           epochs=1)
         self.update_count += 1
         self.save_count += 1
         if self.update_count > self.update_rate:

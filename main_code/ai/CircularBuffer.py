@@ -7,18 +7,22 @@ from localtime import *
 import numpy as np
 from const import *
 
+
 # [st-1, at-1, rt, st, ct]
 class Red:
     def __init__(self, maxsize):
         self.maxsize = maxsize
         self.save_count = 0
         self.rlmemory = deque(maxlen=self.maxsize)
-        with open("Mrl_red.buf", "rb") as Mrl_red:
-            while self.rlmemory.__len__() < self.maxsize:
-                try:
-                    self.rlmemory.append(pickle.load(Mrl_red))
-                except:
-                    break
+        try:
+            with open("Mrl_red.buf", "rb") as Mrl_red:
+                while self.rlmemory.__len__() < self.maxsize:
+                    try:
+                        self.rlmemory.append(pickle.load(Mrl_red))
+                    except:
+                        break
+        except:
+            pass
 
     def save(self):
         try:
@@ -47,12 +51,15 @@ class Black:
         self.maxsize = maxsize
         self.save_count = 0
         self.rlmemory = deque(maxlen=self.maxsize)
-        with open("Mrl_black.buf", "rb") as Mrl_black:
-            while self.rlmemory.__len__() < self.maxsize:
-                try:
-                    self.rlmemory.append(pickle.load(Mrl_black))
-                except:
-                    break
+        try:
+            with open("Mrl_black.buf", "rb") as Mrl_black:
+                while self.rlmemory.__len__() < self.maxsize:
+                    try:
+                        self.rlmemory.append(pickle.load(Mrl_black))
+                    except:
+                        break
+        except:
+            pass
 
     def save(self):
         try:
