@@ -56,7 +56,7 @@ class SLModel:
         action = self.model.predict(st)[0]
         return action
 
-    def train(self, st, at, epochs=100):
+    def train(self, st, at, epochs=10):
         self.model.fit(st, at, epochs=epochs)
         self.save_count += 1
         if self.save_count > self.save_rate:
