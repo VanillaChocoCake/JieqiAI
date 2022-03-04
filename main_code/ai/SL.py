@@ -43,7 +43,7 @@ class SLModel:
         self.learning_rate = learning_rate
         self.camp = camp
         self.save_count = 0
-        self.save_rate = 200
+        self.save_rate = 100
         try:
             if self.camp == camp_red:
                 self.model = load_model("sl_model_red.h5")
