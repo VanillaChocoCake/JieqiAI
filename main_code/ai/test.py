@@ -1,42 +1,24 @@
-import collections
-import copy
-import random
+# from AI_Functions import *
+import numpy as np
 
-import numpy as np
-from tensorflow.keras import models
-from AI_Functions import *
-from main_code.game.Train.GAME_Functions import *
-from const import *
-import pickle
-import numpy as np
-from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Input
-from tensorflow.keras.layers import Activation
-from tensorflow.keras.layers import Conv2D, Dense, MaxPooling2D, MaxPooling3D
-from tensorflow.keras.layers import add, BatchNormalization, Flatten
-from tensorflow.keras.losses import CategoricalCrossentropy, MeanSquaredError
-import tensorflow as tf
-import tensorflow.keras as keras
-from localtime import localtime
-import os
-from const import *
-from SL import *
-from Reservoir import Reservoir
-from RL import *
 from CircularBuffer import *
+from SL import *
+from const import *
+"""
 red_sl_model = SLModel(camp=camp_red)
 black_sl_model = SLModel(camp=camp_black)
 red_agent = DQN(camp=camp_red)
 black_agent = DQN(camp=camp_black)
+Msl = Reservoir()
+Mrl = CircularBuffer()
+red_agent.train(Mrl)
 print(1)
 """
-# train
-red_sl_model = SLModel()
+from SL import SLModel
+from Reservoir import Reservoir
 Msl = Reservoir()
-red_sl_model.train(Msl.red.st, Msl.red.at, camp_red, epochs=100)
-black_sl_model = SLModel()
-black_sl_model.train(Msl.black.st, Msl.black.at, camp_black, epochs=100)
-"""
+rm = SLModel(camp=camp_red)
+rm.train(Msl.red.st, Msl.red.at)
 """
 # test
 # red_model = SLModel(model=models.load_model("sl_model_red.h5"))

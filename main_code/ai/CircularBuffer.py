@@ -1,11 +1,11 @@
 # Mrl-环形缓存
 # 可能用不到了
+import os
 import pickle
 from collections import deque
-import os
-from localtime import *
-import numpy as np
+
 from const import *
+from localtime import *
 
 
 # [st-1, at-1, rt, st, ct]

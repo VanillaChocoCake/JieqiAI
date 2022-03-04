@@ -1,9 +1,6 @@
 # 客户端
 # AI主程序
-import random
 import socket
-
-import numpy as np
 
 from CircularBuffer import CircularBuffer
 from RL import *

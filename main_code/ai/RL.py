@@ -1,12 +1,12 @@
 import os
-import copy
+
 from tensorflow.keras import optimizers
 from tensorflow.keras.layers import Conv2D, Dense, MaxPooling2D
 from tensorflow.keras.layers import Flatten
 from tensorflow.keras.layers import Input
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.models import load_model
-from const import *
+
 from AI_Functions import *
 from localtime import localtime
 
