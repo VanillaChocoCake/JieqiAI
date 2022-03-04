@@ -10,10 +10,11 @@ from const import *
 
 # [st-1, at-1, rt, st, ct]
 class Red:
-    def __init__(self, maxsize):
+    def __init__(self, maxsize, save_rate=300):
         self.maxsize = maxsize
         self.save_count = 0
         self.rlmemory = deque(maxlen=self.maxsize)
+        self.save_rate = save_rate
         try:
             with open("Mrl_red.buf", "rb") as Mrl_red:
                 while self.rlmemory.__len__() < self.maxsize:
@@ -41,16 +42,17 @@ class Red:
             self.rlmemory.popleft()
             self.rlmemory.append(tup)
         self.save_count += 1
-        if self.save_count > 100:
+        if self.save_count > self.save_rate:
             self.save()
             self.save_count = 0
 
 
 class Black:
-    def __init__(self, maxsize):
+    def __init__(self, maxsize, save_rate=300):
         self.maxsize = maxsize
         self.save_count = 0
         self.rlmemory = deque(maxlen=self.maxsize)
+        self.save_rate = save_rate
         try:
             with open("Mrl_black.buf", "rb") as Mrl_black:
                 while self.rlmemory.__len__() < self.maxsize:
@@ -78,7 +80,7 @@ class Black:
             self.rlmemory.popleft()
             self.rlmemory.append(tup)
         self.save_count += 1
-        if self.save_count > 100:
+        if self.save_count > self.save_rate:
             self.save()
             self.save_count = 0
 

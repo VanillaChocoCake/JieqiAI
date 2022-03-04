@@ -1,6 +1,9 @@
 # 客户端
 # AI主程序
+import random
 import socket
+
+import numpy as np
 
 from CircularBuffer import CircularBuffer
 from RL import *
@@ -96,6 +99,15 @@ while True:
                                              sl_model=red_sl_model,
                                              st=st,
                                              actions=red_actions)
+                """
+                beta_red = np.argmax(beta_red)
+                pi_red = np.argmax(pi_red)
+                num = random.uniform(0, 1)
+                if num < eta:
+                    sigma_red = beta_red
+                else:
+                    sigma_red = pi_red
+                """
                 sigma_red = (1 - eta) * pi_red + eta * beta_red
                 # plot(beta_red, pi_red, sigma_red)
                 # sigma dim=8100
@@ -107,6 +119,7 @@ while True:
                 at = convert_num_to_array(action)
                 # at dim=8100
                 if action == np.argmax(beta_red):
+                    # if action == beta_red:
                     tup = (st, at)
                     Msl.update(tup=tup, camp=camp_red)
                 decision = convert_num_to_action(action)
@@ -149,4 +162,3 @@ while True:
         else:
             turn = camp_red
 client.close()
-

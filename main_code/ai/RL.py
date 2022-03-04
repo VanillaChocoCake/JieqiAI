@@ -6,7 +6,7 @@ from tensorflow.keras.layers import Flatten
 from tensorflow.keras.layers import Input
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.models import load_model
-
+from const import *
 from AI_Functions import *
 from localtime import localtime
 
@@ -45,7 +45,7 @@ class DQN:
         self.update_rate = 100
         self.update_count = 0
         self.save_count = 0
-        self.save_rate = 20
+        self.save_rate = 200
         self.target_model = create_model(learning_rate=self.learning_rate)
         self.target_model.set_weights(self.model.get_weights())
         # self.model.summary()
@@ -60,12 +60,12 @@ class DQN:
             np.reshape(at_prev, 8100)
             st = np.array([st])
             if self.camp == camp_red:
-                if ct != 0:
+                if ct != end:
                     target = rt + self.gamma * np.max(self.target_model.predict(st))
                 else:
                     target = rt
             else:
-                if ct != 0:
+                if ct != end:
                     target = rt + self.gamma * np.min(self.target_model.predict(st))
                 else:
                     target = rt

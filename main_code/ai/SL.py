@@ -43,7 +43,7 @@ class SLModel:
         self.learning_rate = learning_rate
         self.camp = camp
         self.save_count = 0
-        self.save_rate = 20
+        self.save_rate = 200
         try:
             if self.camp == camp_red:
                 self.model = load_model("sl_model_red.h5")
@@ -93,9 +93,9 @@ def supervised_learning(Msl, camp, sl_model, st, actions):
     :return: 平均策略Fs dim=8100
     需要随机梯度下降法
     """
-    if camp == camp_red:
+    if camp == camp_red and len(Msl.red.st) > 0:
         sl_model.train(Msl.red.st, Msl.red.at, camp)
-    else:
+    elif camp == camp_black and len(Msl.black.st) > 0:
         sl_model.train(Msl.black.st, Msl.black.at, camp)
     st = np.array([st])
     average_policy = sl_model.predict(st)

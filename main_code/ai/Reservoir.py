@@ -8,12 +8,13 @@ from const import *
 
 
 class Red:
-    def __init__(self, maxsize):
+    def __init__(self, maxsize, save_rate=200):
         self.slmemory = []
         self.maxsize = maxsize
         self.st = []
         self.at = []
         self.save_count = 0
+        self.save_rate = save_rate
         try:
             with open("Msl_red.buf", "rb") as Msl_red:
                 while True:
@@ -60,18 +61,19 @@ class Red:
             self.st[num] = tup[0]
             self.at[num] = tup[1]
         self.save_count += 1
-        if self.save_count > 50:
+        if self.save_count > self.save_rate:
             self.save()
             self.save_count = 0
 
 
 class Black:
-    def __init__(self, maxsize):
+    def __init__(self, maxsize, save_rate=200):
         self.slmemory = []
         self.maxsize = maxsize
         self.st = []
         self.at = []
         self.save_count = 0
+        self.save_rate = save_rate
         try:
             with open("Msl_black.buf", "rb") as Msl_black:
                 while True:
@@ -118,7 +120,7 @@ class Black:
             self.st[num] = tup[0]
             self.at[num] = tup[1]
         self.save_count += 1
-        if self.save_count > 50:
+        if self.save_count > self.save_rate:
             self.save()
             self.save_count = 0
 
