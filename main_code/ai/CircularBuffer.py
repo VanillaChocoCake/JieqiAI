@@ -27,10 +27,10 @@ class Red:
 
     def save(self):
         try:
-            os.rename("Mrl_red.buf", "Mrl_red " + localtime() + ".buf")
+            os.rename("Mrl_red.buf", f'Mrl_red_{localtime()}.buf')
         except:
             pass
-        with open("Mrl_red.buf.buf", "wb") as Mrl_red:
+        with open("Mrl_red.buf", "wb") as Mrl_red:
             while self.rlmemory.__len__() > 0:
                 tup = tuple(self.rlmemory.popleft())
                 pickle.dump(tup, Mrl_red)
@@ -65,10 +65,10 @@ class Black:
 
     def save(self):
         try:
-            os.rename("Mrl_black.buf", "Mrl_black " + localtime() + ".buf")
+            os.rename("Mrl_black.buf", f'Mrl_black_{localtime()}.buf')
         except:
             pass
-        with open("Mrl_black.buf.buf", "wb") as Mrl_black:
+        with open("Mrl_black.buf", "wb") as Mrl_black:
             while self.rlmemory.__len__() > 0:
                 tup = tuple(self.rlmemory.popleft())
                 pickle.dump(tup, Mrl_black)

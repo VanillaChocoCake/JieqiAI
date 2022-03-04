@@ -89,16 +89,10 @@ while True:
         if done == not_end and game_round > 1:
             # 将棋盘转换为10 * 9 * 16
             if turn == camp_red:
-                beta_red = reinforcement_learning(Mrl=Mrl,
-                                                  camp=camp_red,
-                                                  dqn_agent=red_agent,
-                                                  st=st,
-                                                  actions=red_actions)
-                pi_red = supervised_learning(Msl=Msl,
-                                             camp=camp_red,
-                                             sl_model=red_sl_model,
-                                             st=st,
-                                             actions=red_actions)
+                beta_red = reinforcement_learning(Mrl=Mrl, camp=camp_red, dqn_agent=red_agent, st=st, actions=red_actions)
+                # 不知道为什么将train写在supervised_learning里面的时候模型会不训练，因此拿出来了
+                red_sl_model.train(Msl.red.st, Msl.red.at)
+                pi_red = supervised_learning(camp=camp_red, sl_model=red_sl_model, st=st, actions=red_actions)
                 """
                 beta_red = np.argmax(beta_red)
                 pi_red = np.argmax(pi_red)
@@ -108,10 +102,11 @@ while True:
                 else:
                     sigma_red = pi_red
                 """
+
                 sigma_red = (1 - eta) * pi_red + eta * beta_red
-                # plot(beta_red, pi_red, sigma_red)
+                plot(beta_red, pi_red, sigma_red)
                 # sigma dim=8100
-                tup = (st_1, at_1, sigma_red[np.argmax(sigma_red)] * (20 - no_eat_round) / 40, st, done)
+                tup = (st_1, at_1, sigma_red[np.argmax(sigma_red)] * (40 - 2 * no_eat_round) / 40, st, done)
                 # tup = (st_1, at_1, sigma_red[np.argmax(sigma_red)], st, done)
                 Mrl.update(tup=tup, camp=camp_red)
                 action = np.argmax(sigma_red)
@@ -125,19 +120,14 @@ while True:
                 decision = convert_num_to_action(action)
                 # decision string "a b c d"
             else:
-                beta_black = reinforcement_learning(Mrl=Mrl,
-                                                    camp=camp_black,
-                                                    dqn_agent=black_agent,
-                                                    st=st,
-                                                    actions=black_actions)
-                pi_black = supervised_learning(Msl=Msl,
-                                               camp=camp_black,
-                                               sl_model=black_sl_model,
-                                               st=st,
-                                               actions=black_actions)
+                beta_black = reinforcement_learning(Mrl=Mrl, camp=camp_black, dqn_agent=black_agent, st=st, actions=black_actions)
+
+                black_sl_model.train(Msl.black.st, Msl.black.at)
+                pi_black = supervised_learning(camp=camp_black, sl_model=black_sl_model, st=st, actions=black_actions)
+
                 sigma_black = (1 - eta) * pi_black + eta * beta_black
-                # plot(beta_black, pi_black, sigma_black)
-                tup = (st_1, at_1, sigma_black[np.argmin(sigma_black)] * (20 - no_eat_round) / 40, st, done)
+                plot(beta_black, pi_black, sigma_black)
+                tup = (st_1, at_1, sigma_black[np.argmin(sigma_black)] * (40 - 2 * no_eat_round) / 40, st, done)
                 Mrl.update(tup=tup, camp=camp_black)
                 action = np.argmin(sigma_black)
                 at = convert_num_to_array(action)

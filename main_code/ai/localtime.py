@@ -11,5 +11,5 @@ def localtime():
     hour = exact_time[0]
     minute = exact_time[1]
     second = exact_time[2]
-    res = year + "_" + month + "_" + day + "_" + hour + "_" + minute + "_" + second
+    res = f'{year}_{month}_{day}_{hour}_{minute}_{second}'
     return res

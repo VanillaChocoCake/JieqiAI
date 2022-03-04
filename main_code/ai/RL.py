@@ -95,13 +95,13 @@ class DQN:
     def save(self):
         if self.camp == camp_red:
             try:
-                os.rename("rl_model_red.h5", "rl_model_red " + localtime() + ".h5")
+                os.rename("rl_model_red.h5", f'rl_model_red_{localtime()}.h5')
             except:
                 pass
             self.model.save("rl_model_red.h5")
         else:
             try:
-                os.rename("rl_model_black.h5", "rl_model_black " + localtime() + ".h5")
+                os.rename("rl_model_black.h5", f'rl_model_black_{localtime()}.h5')
             except:
                 pass
             self.model.save("rl_model_black.h5")
