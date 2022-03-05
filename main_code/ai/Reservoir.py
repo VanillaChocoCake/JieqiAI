@@ -36,7 +36,7 @@ class Red:
 
     def save(self):
         try:
-            os.rename("Msl_red.buf", "Msl_red " + localtime() + ".buf")
+            os.rename("Msl_red.buf", f'Msl_red_{localtime()}.buf')
         except:
             pass
         with open("Msl_red.buf", "wb") as Msl:
@@ -95,7 +95,7 @@ class Black:
 
     def save(self):
         try:
-            os.rename("Msl_black.buf", "Msl_black " + localtime() + ".buf")
+            os.rename("Msl_black.buf", f'Msl_black_{localtime()}.buf')
         except:
             pass
         with open("Msl_black.buf", "wb") as Msl:

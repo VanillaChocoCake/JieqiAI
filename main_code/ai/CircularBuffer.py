@@ -1,5 +1,6 @@
 # Mrl-环形缓存
 # 可能用不到了
+import copy
 import os
 import pickle
 from collections import deque
@@ -31,8 +32,9 @@ class Red:
         except:
             pass
         with open("Mrl_red.buf", "wb") as Mrl_red:
-            while self.rlmemory.__len__() > 0:
-                tup = tuple(self.rlmemory.popleft())
+            memory = copy.deepcopy(self.rlmemory)
+            while memory.__len__() > 0:
+                tup = tuple(memory.popleft())
                 pickle.dump(tup, Mrl_red)
 
     def update(self, tup):
@@ -69,8 +71,9 @@ class Black:
         except:
             pass
         with open("Mrl_black.buf", "wb") as Mrl_black:
-            while self.rlmemory.__len__() > 0:
-                tup = tuple(self.rlmemory.popleft())
+            memory = copy.deepcopy(self.rlmemory)
+            while memory.__len__() > 0:
+                tup = tuple(memory.popleft())
                 pickle.dump(tup, Mrl_black)
 
     def update(self, tup):
