@@ -112,9 +112,9 @@ def reinforcement_learning(Mrl, camp, dqn_agent, st, actions, batch_size=128):
     return: dim=8100
     """
     if camp == camp_red and len(Mrl.red.rlmemory) > batch_size:
-        dqn_agent.train(Mrl)
+        dqn_agent.train(Mrl, batch_size=batch_size)
     elif camp == camp_black and len(Mrl.black.rlmemory) > batch_size:
-        dqn_agent.train(Mrl)
+        dqn_agent.train(Mrl, batch_size=batch_size)
     random_policy = random_action(actions=actions)
     st = np.array([st])
     best_policy = dqn_agent.predict(st)
