@@ -1,4 +1,4 @@
-# 常量
+# 常量， 仅供AI使用
 host = "127.0.0.1"
 port = 2022
 
@@ -17,7 +17,7 @@ red_win = 1
 black_win = -1
 draw = 0
 
-eta = 0.1
+eta = 0.92
 
 end = 0
 not_end = 1
