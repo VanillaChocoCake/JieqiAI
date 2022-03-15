@@ -4,10 +4,10 @@ import time
 
 def localtime():
     res = time.asctime(time.localtime(time.time())).split(" ")
-    year = res[5]
+    year = res[4]
     month = res[1]
-    day = res[3]
-    exact_time = res[4].split(":")
+    day = res[2]
+    exact_time = res[3].split(":")
     hour = exact_time[0]
     minute = exact_time[1]
     second = exact_time[2]
