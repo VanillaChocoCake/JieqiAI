@@ -622,3 +622,4 @@ def plot(beta, pi, sigma):
     plt.plot(x, pi)
     plt.subplot(3, 1, 3)
     plt.plot(x, sigma)
+    plt.show()

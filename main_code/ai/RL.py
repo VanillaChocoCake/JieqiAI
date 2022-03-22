@@ -51,6 +51,8 @@ class DQN:
         # self.model.summary()
 
     def train(self, Mrl, batch_size=128):
+        if batch_size == 0:
+            return None
         if self.camp == camp_red:
             mini_batch = random.sample(Mrl.red.rlmemory, batch_size)
         else:
