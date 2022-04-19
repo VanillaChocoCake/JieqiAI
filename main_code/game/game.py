@@ -13,7 +13,7 @@
 import copy
 import socket
 import random
-from GAME_Functions import *
+from Game_Functions import *
 
 socket_server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 host = "127.0.0.1"
