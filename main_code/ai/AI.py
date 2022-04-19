@@ -1,7 +1,6 @@
 # 客户端
 # AI主程序
 import socket
-
 from CircularBuffer import CircularBuffer
 from RL import *
 from Reservoir import Reservoir
