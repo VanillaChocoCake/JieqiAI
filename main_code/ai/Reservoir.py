@@ -4,7 +4,7 @@ import pickle
 from localtime import *
 import random
 import numpy as np
-from const import *
+from main_code.const import *
 
 
 class Red:
