@@ -6,7 +6,7 @@ import pickle
 from collections import deque
 
 from main_code.const import *
-from localtime import *
+from main_code.localtime import *
 
 
 # [st-1, at-1, rt, st, ct]

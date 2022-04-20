@@ -12,8 +12,6 @@ while True:
     while True:
         board_info = client.recv(2048)
         message = board_info.decode("utf-8")
-        if message == "end":
-            break
         message = message.split(" ")
         board = translate_message(message)
         st = convert_board_to_array(board)

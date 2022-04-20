@@ -52,7 +52,7 @@ while True:
             print("本局结束")
             break
         decision = decision.split(" ")
-        decision = string_to_int(decision)
+        decision = list_to_int(decision)
         src = [decision[0], decision[1]]
         dst = [decision[2], decision[3]]
         print("决策：", decision)

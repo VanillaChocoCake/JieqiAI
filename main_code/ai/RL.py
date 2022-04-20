@@ -8,7 +8,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.models import load_model
 
 from AI_Functions import *
-from localtime import localtime
+from main_code.localtime import localtime
 
 
 def create_model(learning_rate=0.1):

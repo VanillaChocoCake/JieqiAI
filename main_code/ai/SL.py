@@ -9,7 +9,7 @@ from tensorflow.keras.layers import add, BatchNormalization, Flatten
 from tensorflow.keras.models import load_model, Model
 
 from AI_Functions import *
-from localtime import localtime
+from main_code.localtime import localtime
 
 
 def create_model(learning_rate):

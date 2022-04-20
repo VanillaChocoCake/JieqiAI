@@ -154,7 +154,7 @@ def update_board(src, dst, board, red_info, black_info):
     return board, red_info, black_info
 
 
-def string_to_int(lst):
+def list_to_int(lst):
     for i in range(0, len(lst)):
         lst[i] = int(lst[i])
     return lst
