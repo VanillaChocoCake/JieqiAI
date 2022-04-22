@@ -61,7 +61,7 @@ while True:
                 print(f'{key}-{Red_Dic[key]}')
             human_decision = input("人类决策：").split(" ")
             src = [int(human_decision[0]), int(human_decision[1])]
-            dst = [int(human_decision[2]), int(human_decision[2])]
+            dst = [int(human_decision[2]), int(human_decision[3])]
             print(src, dst)
             if len(human_decision) == 5:
                 board = update_display_board(src, dst, board, camp_red, chess=human_decision[4])
@@ -92,7 +92,7 @@ while True:
             print(f'从{display_src}到{display_dst}')
             board = update_display_board(src, dst, board, camp_black)
             if board[dst[0]][dst[1]] == "红未":
-                for key in Black_Dic:
+                for key in Red_Dic:
                     print(f'{key}-{Red_Dic[key]}')
                 chess = input("该棋子揭开为：")
                 board[dst[0]][dst[1]] = Red_Dic[chess]
@@ -101,7 +101,7 @@ while True:
                 print(f'{key}-{Black_Dic[key]}')
             human_decision = input("人类决策：").split(" ")
             src = [9 - int(human_decision[0]), 8 - int(human_decision[1])]
-            dst = [9 - int(human_decision[2]), 8 - int(human_decision[2])]
+            dst = [9 - int(human_decision[2]), 8 - int(human_decision[3])]
             print(f'从{src}到{dst}')
             if len(human_decision) == 5:
                 board = update_display_board(src, dst, board, camp_red, chess=human_decision[4])

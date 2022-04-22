@@ -22,7 +22,7 @@ while True:
         else:
             predict = black_sl_model.predict(st)
             action = np.argmin(message)
-        decision = convert_num_to_array(action)
+        decision = convert_num_to_action(action)
         client.send(decision.encode("utf-8"))
 
 
