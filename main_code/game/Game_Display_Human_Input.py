@@ -3,13 +3,14 @@ import copy
 from main_code.const import *
 from main_code.game.Game_Functions import *
 from main_code.localtime import localtime
-# 棋盘翻转
+
 Red_Dic = {'1': "红车",
            '2': "红炮",
            '3': "红马",
            '4': "红相",
            '5': "红仕",
            '6': "红兵"}
+
 Black_Dic = {'1': "黑车",
              '2': "黑炮",
              '3': "黑马",
@@ -47,12 +48,13 @@ socket_server.bind((host, port))
 socket_server.listen(5)
 client_socket, address = socket_server.accept()
 file_name = localtime()
+all_movements = ""
 while True:
     human_side = int(input("人类：红方1，黑方0："))
     ai_side = 1 - human_side
     game_round = 1
     board = copy.deepcopy(initial_board)
-    all_movements = ""
+    movement = ""
     if human_side == camp_red:
         if game_round % 2 == 1:
             for key in Red_Dic:
@@ -78,5 +80,34 @@ while True:
                     print(f'{key}-{Black_Dic[key]}')
                 chess = input("该棋子揭开为：")
                 board[dst[0]][dst[1]] = Black_Dic[chess]
-        all_movements += f'[{src[0]},{src[1]},{dst[0]},{dst[1]}]'
-
+    else:
+        if game_round % 2 == 1:
+            message = list_to_string(board)
+            client_socket.send(message.encode("utf-8"))
+            ai_decision = client_socket.recv(2048).decode("utf-8").split(" ")
+            src = [int(ai_decision[0]), int(ai_decision[1])]
+            dst = [int(ai_decision[2]), int(ai_decision[3])]
+            display_src = [9 - src[0], 8 - src[1]]
+            display_dst = [9 - dst[0], 8 - dst[1]]
+            print(f'从{display_src}到{display_dst}')
+            board = update_display_board(src, dst, board, camp_black)
+            if board[dst[0]][dst[1]] == "红未":
+                for key in Black_Dic:
+                    print(f'{key}-{Red_Dic[key]}')
+                chess = input("该棋子揭开为：")
+                board[dst[0]][dst[1]] = Red_Dic[chess]
+        else:
+            for key in Black_Dic:
+                print(f'{key}-{Black_Dic[key]}')
+            human_decision = input("人类决策：").split(" ")
+            src = [9 - int(human_decision[0]), 8 - int(human_decision[1])]
+            dst = [9 - int(human_decision[2]), 8 - int(human_decision[2])]
+            print(f'从{src}到{dst}')
+            if len(human_decision) == 5:
+                board = update_display_board(src, dst, board, camp_red, chess=human_decision[4])
+            else:
+                board = update_display_board(src, dst, board, camp_red)
+    movement = f'[{src[0]},{src[1]},{dst[0]},{dst[1]}]'
+    all_movements += f'{movement}, '
+    with open("log.txt", "a+") as log:
+        log.write(movement)

@@ -15,13 +15,14 @@ while True:
         message = message.split(" ")
         board = translate_message(message)
         st = convert_board_to_array(board)
+        st = np.array([st])
         if side == camp_red:
             predict = red_sl_model.predict(st)
             action = np.argmax(predict)
         else:
             predict = black_sl_model.predict(st)
             action = np.argmin(message)
-        decision = convert_board_to_array(action)
+        decision = convert_num_to_array(action)
         client.send(decision.encode("utf-8"))
 
 
