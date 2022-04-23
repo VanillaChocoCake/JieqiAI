@@ -2,6 +2,7 @@
 import socket
 from SL import *
 import numpy as np
+from AI_Functions import *
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect((host, port))
@@ -15,12 +16,12 @@ while True:
         message = message.split(" ")
         board = translate_message(message)
         st = convert_board_to_array(board)
-        st = np.array([st])
+        red_actions, black_actions = available_actions(board)
         if side == camp_red:
-            predict = red_sl_model.predict(st)
+            predict = supervised_learning(camp=camp_red, sl_model=red_sl_model, st=st, actions=red_actions)
             action = np.argmax(predict)
         else:
-            predict = black_sl_model.predict(st)
+            predict = supervised_learning(camp=camp_black, sl_model=black_sl_model, st=st, actions=black_actions)
             action = np.argmin(message)
         decision = convert_num_to_action(action)
         client.send(decision.encode("utf-8"))
