@@ -112,5 +112,5 @@ while True:
                     board[dst[0]][dst[1]] = Black_Dic[chess]
         movement = f'[{src[0]},{src[1]},{dst[0]},{dst[1]}]'
         all_movements += f'{movement}, '
-        with open("log.txt", "a+") as log:
+        with open(f'{file_name}.txt', "a+") as log:
             log.write(movement)
