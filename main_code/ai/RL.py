@@ -39,7 +39,7 @@ class DQN:
         except:
             self.model = create_model(self.learning_rate)
         self.gamma = 1.0
-        self.epsilon = 0.1
+        self.epsilon = 0.99
         self.epsilon_min = 1e-6
         self.epsilon_decay = 0.999
         self.update_rate = 100
