@@ -129,13 +129,16 @@ def all_actions(board):
     black_actions = []
     for x in range(0, 10):
         for y in range(0, 9):
+            is_hidden = False
             if board[x][y] == "空":
                 continue
             chess = board[x][y]
-            if chess.find('未') >= 0 and camp(chess) == 1:
-                chess = "红" + normal_board[x][y]
-            elif chess.find('未') >= 0 and camp(chess) == 0:
-                chess = "黑" + normal_board[x][y]
+            if chess.find('未') >= 0:
+                is_hidden = True
+                if camp(chess) == camp_red:
+                    chess = "红" + normal_board[x][y]
+                else:
+                    chess = "黑" + normal_board[x][y]
             res = []
             if chess == "帅" or chess == "将":  # 帅或将只能上下左右走
                 if border_check(chess, [x + 1, y]) is safe:
@@ -151,18 +154,28 @@ def all_actions(board):
                     if camp(chess) != camp(board[x][y - 1]):
                         res.append([x, y, x, y - 1, chess])
             elif chess.find('士') >= 0 or chess.find('仕') >= 0:  # 仕或士只能一格对角线走
-                if border_check(chess, [x - 1, y - 1]) is safe:
-                    if camp(chess) != camp(board[x - 1][y - 1]):
-                        res.append([x, y, x - 1, y - 1, chess])
-                if border_check(chess, [x - 1, y + 1]) is safe:
-                    if camp(chess) != camp(board[x - 1][y + 1]):
-                        res.append([x, y, x - 1, y + 1, chess])
-                if border_check(chess, [x + 1, y - 1]) is safe:
-                    if camp(chess) != camp(board[x + 1][y - 1]):
-                        res.append([x, y, x + 1, y - 1, chess])
-                if border_check(chess, [x + 1, y + 1]) is safe:
-                    if camp(chess) != camp(board[x + 1][y + 1]):
-                        res.append([x, y, x + 1, y + 1, chess])
+                if is_hidden is False:
+                    if border_check(chess, [x - 1, y - 1]) is safe:
+                        if camp(chess) != camp(board[x - 1][y - 1]):
+                            res.append([x, y, x - 1, y - 1, chess])
+                    if border_check(chess, [x - 1, y + 1]) is safe:
+                        if camp(chess) != camp(board[x - 1][y + 1]):
+                            res.append([x, y, x - 1, y + 1, chess])
+                    if border_check(chess, [x + 1, y - 1]) is safe:
+                        if camp(chess) != camp(board[x + 1][y - 1]):
+                            res.append([x, y, x + 1, y - 1, chess])
+                    if border_check(chess, [x + 1, y + 1]) is safe:
+                        if camp(chess) != camp(board[x + 1][y + 1]):
+                            res.append([x, y, x + 1, y + 1, chess])
+                else:
+                    if x == 0 and y == 3 and camp(board[1][4]) != camp(chess):
+                        res.append([0, 3, 1,  4, chess])
+                    elif x == 0 and y == 5 and camp(board[1][4]) != camp(chess):
+                        res.append([0, 5, 1, 4, chess])
+                    elif x == 9 and y == 3 and camp(board[8][4]) != camp(chess):
+                        res.append([9, 3, 8, 4, chess])
+                    elif x == 9 and y == 5 and camp(board[8][4]) != camp(chess):
+                        res.append([9, 5, 8, 4, chess])
             elif chess.find('象') >= 0 or chess.find('相') >= 0:  # 相或象只能两格对角线走，还有塞象眼情况
                 if border_check(chess, [x - 2, y - 2]) is safe:
                     if camp(chess) != camp(board[x - 2][y - 2]) and camp(board[x - 1][y - 1]) == blank:
