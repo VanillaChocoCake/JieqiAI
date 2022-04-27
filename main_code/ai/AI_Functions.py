@@ -612,6 +612,7 @@ def random_action(actions):
     actions: [a, b, c, d, e]
     return: dim=8100
     """
+    random.shuffle(actions)
     random_policy = random.sample(actions, 1)[0]
     random_policy = convert_action_to_array(random_policy)
     return random_policy

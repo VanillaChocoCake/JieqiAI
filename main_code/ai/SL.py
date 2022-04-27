@@ -62,7 +62,6 @@ class SLModel:
         self.model.fit(st, at, epochs=epochs)
         self.save_count += 1
         if self.save_count > self.save_rate:
-            self.save()
             self.save_count = 0
 
     def generate_figure(self):
