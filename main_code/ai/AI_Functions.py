@@ -143,90 +143,90 @@ def all_actions(board):
             if chess == "帅" or chess == "将":  # 帅或将只能上下左右走
                 if border_check(chess, [x + 1, y]) is safe:
                     if camp(chess) != camp(board[x + 1][y]):
-                        res.append([x, y, x + 1, y, chess])
+                        res.append([x, y, x + 1, y])
                 if border_check(chess, [x - 1, y]) is safe:
                     if camp(chess) != camp(board[x - 1][y]):
-                        res.append([x, y, x - 1, y, chess])
+                        res.append([x, y, x - 1, y])
                 if border_check(chess, [x, y + 1]) is safe:
                     if camp(chess) != camp(board[x][y + 1]):
-                        res.append([x, y, x, y + 1, chess])
+                        res.append([x, y, x, y + 1])
                 if border_check(chess, [x, y - 1]) is safe:
                     if camp(chess) != camp(board[x][y - 1]):
-                        res.append([x, y, x, y - 1, chess])
+                        res.append([x, y, x, y - 1])
             elif chess.find('士') >= 0 or chess.find('仕') >= 0:  # 仕或士只能一格对角线走
                 if is_hidden is False:
                     if border_check(chess, [x - 1, y - 1]) is safe:
                         if camp(chess) != camp(board[x - 1][y - 1]):
-                            res.append([x, y, x - 1, y - 1, chess])
+                            res.append([x, y, x - 1, y - 1])
                     if border_check(chess, [x - 1, y + 1]) is safe:
                         if camp(chess) != camp(board[x - 1][y + 1]):
-                            res.append([x, y, x - 1, y + 1, chess])
+                            res.append([x, y, x - 1, y + 1])
                     if border_check(chess, [x + 1, y - 1]) is safe:
                         if camp(chess) != camp(board[x + 1][y - 1]):
-                            res.append([x, y, x + 1, y - 1, chess])
+                            res.append([x, y, x + 1, y - 1])
                     if border_check(chess, [x + 1, y + 1]) is safe:
                         if camp(chess) != camp(board[x + 1][y + 1]):
-                            res.append([x, y, x + 1, y + 1, chess])
+                            res.append([x, y, x + 1, y + 1])
                 else:
                     if x == 0 and y == 3 and camp(board[1][4]) != camp(chess):
-                        res.append([0, 3, 1,  4, chess])
+                        res.append([0, 3, 1,  4])
                     elif x == 0 and y == 5 and camp(board[1][4]) != camp(chess):
-                        res.append([0, 5, 1, 4, chess])
+                        res.append([0, 5, 1, 4])
                     elif x == 9 and y == 3 and camp(board[8][4]) != camp(chess):
-                        res.append([9, 3, 8, 4, chess])
+                        res.append([9, 3, 8, 4])
                     elif x == 9 and y == 5 and camp(board[8][4]) != camp(chess):
-                        res.append([9, 5, 8, 4, chess])
+                        res.append([9, 5, 8, 4])
             elif chess.find('象') >= 0 or chess.find('相') >= 0:  # 相或象只能两格对角线走，还有塞象眼情况
                 if border_check(chess, [x - 2, y - 2]) is safe:
                     if camp(chess) != camp(board[x - 2][y - 2]) and camp(board[x - 1][y - 1]) == blank:
-                        res.append([x, y, x - 2, y - 2, chess])
+                        res.append([x, y, x - 2, y - 2])
                 if border_check(chess, [x - 2, y + 2]) is safe:
                     if camp(chess) != camp(board[x - 2][y + 2]) and camp(board[x - 1][y + 1]) == blank:
-                        res.append([x, y, x - 2, y + 2, chess])
+                        res.append([x, y, x - 2, y + 2])
                 if border_check(chess, [x + 2, y - 2]) is safe:
                     if camp(chess) != camp(board[x + 2][y - 2]) and camp(board[x + 1][y - 1]) == blank:
-                        res.append([x, y, x + 2, y - 2, chess])
+                        res.append([x, y, x + 2, y - 2])
                 if border_check(chess, [x + 2, y + 2]) is safe:
                     if camp(chess) != camp(board[x + 2][y + 2]) and camp(board[x + 1][y + 1]) == blank:
-                        res.append([x, y, x + 2, y + 2, chess])
+                        res.append([x, y, x + 2, y + 2])
             elif chess.find("车") >= 0:
                 i = x - 1
                 while border_check(chess, [i, y]) is safe:  # 上方所有可以走的点
                     if board[i][y] == "空":  # 空的当然可以走
-                        res.append([x, y, i, y, chess])
+                        res.append([x, y, i, y])
                         i -= 1
                     elif camp(chess) != camp(board[i][y]):  # 吃棋子
-                        res.append([x, y, i, y, chess])
+                        res.append([x, y, i, y])
                         break
                     else:  # 是同颜色的棋子
                         break
                 i = x + 1
                 while border_check(chess, [i, y]) is safe:  # 下方可以走的点
                     if board[i][y] == "空":
-                        res.append([x, y, i, y, chess])
+                        res.append([x, y, i, y])
                         i += 1
                     elif camp(chess) != camp(board[i][y]):
-                        res.append([x, y, i, y, chess])
+                        res.append([x, y, i, y])
                         break
                     else:
                         break
                 j = y - 1
                 while border_check(chess, [x, j]) is safe:  # 左边可以走的点
                     if board[x][j] == "空":
-                        res.append([x, y, x, j, chess])
+                        res.append([x, y, x, j])
                         j -= 1
                     elif camp(chess) != camp(board[x][j]):
-                        res.append([x, y, x, j, chess])
+                        res.append([x, y, x, j])
                         break
                     else:
                         break
                 j = y + 1
                 while border_check(chess, [x, j]) is safe:  # 右边可以走的点
                     if board[x][j] == "空":
-                        res.append([x, y, x, j, chess])
+                        res.append([x, y, x, j])
                         j += 1
                     elif camp(chess) != camp(board[x][j]):
-                        res.append([x, y, x, j, chess])
+                        res.append([x, y, x, j])
                         break
                     else:
                         break
@@ -235,48 +235,48 @@ def all_actions(board):
                 jump = 0
                 while border_check(chess, [i, y]) is safe:  # 上方所有可以走的点
                     if board[i][y] == "空" and jump == 0:  # 空的当然可以走
-                        res.append([x, y, i, y, chess])
+                        res.append([x, y, i, y])
                     elif board[i][y] != "空" and jump == 0:  # 到达第一个棋子，准备看有没有吃子的可能
                         jump = 1
                     elif board[i][y] != "空" and jump == 1:  # 准备吃子后，有棋子
                         if camp(chess) != camp(board[i][y]):  # 是对方棋子就添加进去
-                            res.append([x, y, i, y, chess])
+                            res.append([x, y, i, y])
                         break
                     i -= 1
                 i = x + 1
                 jump = 0
                 while border_check(chess, [i, y]) is safe:  # 下方所有可以走的点
                     if board[i][y] == "空" and jump == 0:  # 空的当然可以走
-                        res.append([x, y, i, y, chess])
+                        res.append([x, y, i, y])
                     elif board[i][y] != "空" and jump == 0:  # 到达第一个棋子，准备看有没有吃子的可能
                         jump = 1
                     elif board[i][y] != "空" and jump == 1:  # 准备吃子后，有棋子
                         if camp(chess) != camp(board[i][y]):  # 是对方棋子就添加进去
-                            res.append([x, y, i, y, chess])
+                            res.append([x, y, i, y])
                         break
                     i += 1
                 j = y - 1
                 jump = 0
                 while border_check(chess, [x, j]) is safe:  # 左方所有可以走的点
                     if board[x][j] == "空" and jump == 0:  # 空的当然可以走
-                        res.append([x, y, x, j, chess])
+                        res.append([x, y, x, j])
                     elif board[x][j] != "空" and jump == 0:  # 到达第一个棋子，准备看有没有吃子的可能
                         jump = 1
                     elif board[x][j] != "空" and jump == 1:  # 准备吃子后，有对方棋子
                         if camp(chess) != camp(board[x][j]):
-                            res.append([x, y, x, j, chess])
+                            res.append([x, y, x, j])
                         break
                     j -= 1
                 j = y + 1
                 jump = 0
                 while border_check(chess, [x, j]) is safe:  # 右方所有可以走的点
                     if board[x][j] == "空" and jump == 0:  # 空的当然可以走
-                        res.append([x, y, x, j, chess])
+                        res.append([x, y, x, j])
                     elif board[x][j] != "空" and jump == 0:  # 到达第一个棋子，准备看有没有吃子的可能
                         jump = 1
                     elif board[x][j] != "空" and jump == 1:  # 准备吃子后，有对方棋子
                         if camp(chess) != camp(board[x][j]):
-                            res.append([x, y, x, j, chess])
+                            res.append([x, y, x, j])
                         break
                     j += 1
             elif chess.find("马") >= 0:
@@ -284,82 +284,82 @@ def all_actions(board):
                     if board[x + 1][y] == "空":  # 下方没有“蹩马腿”
                         if border_check(chess, [x + 2, y - 1]) is safe:
                             if camp(chess) != camp(board[x + 2][y - 1]):
-                                res.append([x, y, x + 2, y - 1, chess])
+                                res.append([x, y, x + 2, y - 1])
                         if border_check(chess, [x + 2, y + 1]) is safe:
                             if camp(chess) != camp(board[x + 2][y + 1]):
-                                res.append([x, y, x + 2, y + 1, chess])
+                                res.append([x, y, x + 2, y + 1])
                 if border_check(chess, [x - 1, y]) is safe:
                     if board[x - 1][y] == "空":  # 上方没有“蹩马腿”
                         if border_check(chess, [x - 2, y - 1]) is safe:
                             if camp(chess) != camp(board[x - 2][y - 1]):
-                                res.append([x, y, x - 2, y - 1, chess])
+                                res.append([x, y, x - 2, y - 1])
                         if border_check(chess, [x - 2, y + 1]) is safe:
                             if camp(chess) != camp(board[x - 2][y + 1]):
-                                res.append([x, y, x - 2, y + 1, chess])
+                                res.append([x, y, x - 2, y + 1])
                 if border_check(chess, [x, y - 1]) is safe:
                     if board[x][y - 1] == "空":  # 左方没有“蹩马腿”
                         if border_check(chess, [x - 1, y - 2]) is safe:
                             if camp(chess) != camp(board[x - 1][y - 2]):
-                                res.append([x, y, x - 1, y - 2, chess])
+                                res.append([x, y, x - 1, y - 2])
                         if border_check(chess, [x + 1, y - 2]) is safe:
                             if camp(chess) != camp(board[x + 1][y - 2]):
-                                res.append([x, y, x + 1, y - 2, chess])
+                                res.append([x, y, x + 1, y - 2])
                 if border_check(chess, [x, y + 1]) is safe:
                     if board[x][y + 1] == "空":  # 右方没有“蹩马腿”
                         if border_check(chess, [x - 1, y + 2]) is safe:
                             if camp(chess) != camp(board[x - 1][y + 2]):
-                                res.append([x, y, x - 1, y + 2, chess])
+                                res.append([x, y, x - 1, y + 2])
                         if border_check(chess, [x + 1, y + 2]) is safe:
                             if camp(chess) != camp(board[x + 1][y + 2]):
-                                res.append([x, y, x + 1, y + 2, chess])
+                                res.append([x, y, x + 1, y + 2])
             elif chess.find("兵") >= 0:  # 红兵分别在下面和上面的情况
                 black_king = find_chess(board, "将")
                 if black_king[0] <= 2:
                     if border_check(chess, [x - 1, y]) is safe:
                         if camp(chess) != camp(board[x - 1][y]):
-                            res.append([x, y, x - 1, y, chess])
+                            res.append([x, y, x - 1, y])
                     if 0 <= x <= 4:
                         if border_check(chess, [x, y - 1]) is safe:
                             if camp(chess) != camp(board[x][y - 1]):
-                                res.append([x, y, x, y - 1, chess])
+                                res.append([x, y, x, y - 1])
                         if border_check(chess, [x, y + 1]) is safe:
                             if camp(chess) != camp(board[x][y + 1]):
-                                res.append([x, y, x, y + 1, chess])
+                                res.append([x, y, x, y + 1])
                 elif black_king[0] >= 7:
                     if border_check(chess, [x + 1, y]) is safe:
                         if camp(chess) != camp(board[x + 1][y]):
-                            res.append([x, y, x + 1, y, chess])
+                            res.append([x, y, x + 1, y])
                     if 5 <= x <= 9:
                         if border_check(chess, [x, y - 1]) is safe:
                             if camp(chess) != camp(board[x][y - 1]):
-                                res.append([x, y, x, y - 1, chess])
+                                res.append([x, y, x, y - 1])
                         if border_check(chess, [x, y + 1]) is safe:
                             if camp(chess) != camp(board[x][y + 1]):
-                                res.append([x, y, x, y + 1, chess])
+                                res.append([x, y, x, y + 1])
             elif chess.find("卒") >= 0:
                 red_king = find_chess(board, "帅")
                 if red_king[0] <= 2:
                     if border_check(chess, [x - 1, y]) is safe:
                         if camp(chess) != camp(board[x - 1][y]):
-                            res.append([x, y, x - 1, y, chess])
+                            res.append([x, y, x - 1, y])
                     if 0 <= x <= 4:
                         if border_check(chess, [x, y - 1]) is safe:
                             if camp(chess) != camp(board[x][y - 1]):
-                                res.append([x, y, x, y - 1, chess])
+                                res.append([x, y, x, y - 1])
                         if border_check(chess, [x, y + 1]) is safe:
                             if camp(chess) != camp(board[x][y + 1]):
-                                res.append([x, y, x, y + 1, chess])
+                                res.append([x, y, x, y + 1])
                 elif red_king[0] >= 7:
                     if border_check(chess, [x + 1, y]) is safe:
                         if camp(chess) != camp(board[x + 1][y]):
-                            res.append([x, y, x + 1, y, chess])
+                            res.append([x, y, x + 1, y])
                     if 5 <= x <= 9:
                         if border_check(chess, [x, y - 1]) is safe:
                             if camp(chess) != camp(board[x][y - 1]):
-                                res.append([x, y, x, y - 1, chess])
+                                res.append([x, y, x, y - 1])
                         if border_check(chess, [x, y + 1]) is safe:
                             if camp(chess) != camp(board[x][y + 1]):
-                                res.append([x, y, x, y + 1, chess])
+                                res.append([x, y, x, y + 1])
             if camp(chess) == camp_red:
                 red_actions.extend(res)
             else:
@@ -574,7 +574,7 @@ def convert_num_to_action(num):
     return str(src[0]) + " " + str(src[1]) + " " + str(dst[0]) + " " + str(dst[1])
 
 
-def generate_policy(predict_res, available_actions):
+def generate_policy(predict_res, available_actions, camp):
     """
     将输出结果中的不可行行动排除，随后进行归一化
     :param predict_res:模型输出的结果，8100维
@@ -589,6 +589,12 @@ def generate_policy(predict_res, available_actions):
             res[i] = res[i] / pos_sum
         elif res[i] < -1e-6:
             res[i] = res[i] / neg_sum_abs
+    for i in range(0, 10):
+        for j in range(0, 9):
+            if camp == camp_red:
+                res[90 * (9 * i + j) + 9 * i + j] = -2
+            else:
+                res[90 * (9 * i + j) + 9 * i + j] = 2
     return res
 
 

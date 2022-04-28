@@ -126,7 +126,7 @@ def reinforcement_learning(Mrl, camp, dqn_agent, st, actions, batch_size=128):
             random_policy[i] = random_policy[i] / abs(random_policy[i])
     available_policy = np.zeros(8100)
     available_policy = convert_action_to_array(actions, available_policy)
-    beta = generate_policy(best_policy, available_policy)
+    beta = generate_policy(best_policy, available_policy, camp=camp)
     num = random.uniform(0, 1)
     if num > dqn_agent.epsilon:
         return beta

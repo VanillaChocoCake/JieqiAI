@@ -92,15 +92,6 @@ while True:
                 if Msl.red.save_count == 0:
                     red_sl_model.train(Msl.red.st, Msl.red.at)
                 pi_red = supervised_learning(camp=camp_red, sl_model=red_sl_model, st=st, actions=red_actions)
-                """
-                beta_red = np.argmax(beta_red)
-                pi_red = np.argmax(pi_red)
-                num = random.uniform(0, 1)
-                if num < eta:
-                    sigma_red = beta_red
-                else:
-                    sigma_red = pi_red
-                """
                 sigma_red = (1 - eta) * pi_red + eta * beta_red
                 plot(beta_red, pi_red, sigma_red)
                 # sigma dim=8100
