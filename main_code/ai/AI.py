@@ -112,7 +112,7 @@ while True:
                     tup = (st, at)
                     Msl.update(tup=tup, camp=camp_red)
                 decision = convert_num_to_action(action)
-                print(f'red: '
+                print(f'red: \n'
                       f'pi max = {np.argmax(pi_red)}, {pi_red[np.argmax(pi_red)]};\n'
                       f'beta max = {np.argmax(beta_red)}, {beta_red[np.argmax(beta_red)]};\n'
                       f'sigma max = {np.argmax(sigma_red)}, {sigma_red[np.argmax(sigma_red)]};\n'
@@ -139,8 +139,8 @@ while True:
                     tup = (st, at)
                     Msl.update(tup=tup, camp=camp_black)
                 decision = convert_num_to_action(action)
-                print(f'black: '
-                      f'pi min = {np.argmin(pi_black)}, {pi_black[np.argmin(pi_black)]};\n'
+                print(f'black: \n'
+                      f'pi max = {np.argmax(pi_black)}, {pi_black[np.argmax(pi_black)]};\n'
                       f'beta min = {np.argmin(beta_black)}, {beta_black[np.argmin(beta_black)]};\n'
                       f'sigma min = {np.argmin(sigma_black)}, {sigma_black[np.argmin(sigma_black)]};\n'
                       f'decision : {decision}\n')
