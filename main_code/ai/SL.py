@@ -63,6 +63,7 @@ class SLModel:
         self.save_count += 1
         if self.save_count > self.save_rate:
             self.save_count = 0
+            self.save()
 
     def generate_figure(self):
         from tensorflow.keras.utils import plot_model
@@ -93,21 +94,13 @@ def supervised_learning(camp, sl_model, st, actions):
     :return: 平均策略Fs dim=8100
     需要随机梯度下降法
     """
-    """
-    if camp == camp_red and len(Msl.red.st) > 0:
-        sl_model.train(Msl.red.st, Msl.red.at, camp)
-    elif camp == camp_black and len(Msl.black.st) > 0:
-        sl_model.train(Msl.black.st, Msl.black.at, camp)
-    # 删除掉这一步的原因在于，函数运行到这里后，并不会训练模型
-    # 不要问我为什么，我也不知道
-    """
     st = np.array([st])
     average_policy = sl_model.predict(st)
     available_policy = np.zeros(8100)
     available_policy = convert_action_to_array(actions, available_policy)
     average_policy = generate_policy(average_policy, available_policy)
-    # src, dst = convert_num_to_action(average_policy)
-    if camp == camp_red:
+    """if camp == camp_red:
         return average_policy
     else:
-        return -average_policy
+        return -average_policy"""
+    return average_policy

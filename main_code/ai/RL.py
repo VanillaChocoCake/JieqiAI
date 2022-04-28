@@ -39,13 +39,13 @@ class DQN:
         except:
             self.model = create_model(self.learning_rate)
         self.gamma = 1.0
-        self.epsilon = 0.99
+        self.epsilon = 0.6
         self.epsilon_min = 1e-6
         self.epsilon_decay = 0.999
         self.update_rate = 100
         self.update_count = 0
         self.save_count = 0
-        self.save_rate = 100
+        self.save_rate = 200
         self.target_model = create_model(learning_rate=self.learning_rate)
         self.target_model.set_weights(self.model.get_weights())
         # self.model.summary()

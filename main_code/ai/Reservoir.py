@@ -14,7 +14,9 @@ class Red:
         self.st = []
         self.at = []
         self.save_count = 0
-        self.save_rate = save_rate
+        self.save_rate = 500
+        self.save_decay = 0.9
+        self.save_rate_min = save_rate
         try:
             with open("Msl_red.buf", "rb") as Msl_red:
                 while True:
@@ -63,6 +65,7 @@ class Red:
         self.save_count += 1
         if self.save_count > self.save_rate:
             self.save()
+            self.save_rate = max([int(self.save_rate * self.save_decay), self.save_rate_min])
             self.save_count = 0
 
 
@@ -73,7 +76,9 @@ class Black:
         self.st = []
         self.at = []
         self.save_count = 0
-        self.save_rate = save_rate
+        self.save_rate = 500
+        self.save_decay = 0.9
+        self.save_rate_min = save_rate
         try:
             with open("Msl_black.buf", "rb") as Msl_black:
                 while True:
@@ -122,6 +127,7 @@ class Black:
         self.save_count += 1
         if self.save_count > self.save_rate:
             self.save()
+            self.save_rate = max([int(self.save_rate * self.save_decay), self.save_rate_min])
             self.save_count = 0
 
 

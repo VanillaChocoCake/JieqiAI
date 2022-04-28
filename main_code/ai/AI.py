@@ -85,13 +85,12 @@ while True:
         if done == not_end and game_round > 1:
             # 将棋盘转换为10 * 9 * 16
             if turn == camp_red:
-                beta_red = reinforcement_learning(Mrl=Mrl, camp=camp_red, dqn_agent=red_agent, st=st, actions=red_actions)
+                beta_red = reinforcement_learning(Mrl=Mrl, camp=camp_red, dqn_agent=red_agent, st=st, actions=red_actions, batch_size=8)
                 # 不知道为什么将train写在supervised_learning里面的时候模型会不训练，因此拿出来了
                 # 因为save_count会根据存储次数而增加，当save_count为0的时候意味着已经增加了save_rate个元组
                 # 为了避免过拟合，因此在此时进行训练一次
                 if Msl.red.save_count == 0:
                     red_sl_model.train(Msl.red.st, Msl.red.at)
-                    red_sl_model.save()
                 pi_red = supervised_learning(camp=camp_red, sl_model=red_sl_model, st=st, actions=red_actions)
                 # sigma_red = (1 - eta) * pi_red + eta * beta_red
                 ####################################
@@ -99,7 +98,7 @@ while True:
                 sigma_red = np.multiply(pi_red, beta_red)
                 ##
                 ####################################
-                plot(beta_red, pi_red, sigma_red)
+                # plot(beta_red, pi_red, sigma_red)
                 # sigma dim=8100
                 tup = (st_1, at_1, sigma_red[np.argmax(sigma_red)] * (40 - 2 * no_eat_round) / 40, st, done)
                 Mrl.update(tup=tup, camp=camp_red)
@@ -119,10 +118,9 @@ while True:
                       f'decision : {decision}\n')
                 # decision string "a b c d"
             else:
-                beta_black = reinforcement_learning(Mrl=Mrl, camp=camp_black, dqn_agent=black_agent, st=st, actions=black_actions)
+                beta_black = reinforcement_learning(Mrl=Mrl, camp=camp_black, dqn_agent=black_agent, st=st, actions=black_actions, batch_size=8)
                 if Msl.black.save_count == 0:
                     black_sl_model.train(Msl.black.st, Msl.black.at)
-                    black_sl_model.save()
                 pi_black = supervised_learning(camp=camp_black, sl_model=black_sl_model, st=st, actions=black_actions)
                 # sigma_black = (1 - eta) * pi_black + eta * beta_black
                 ####################################
@@ -130,7 +128,7 @@ while True:
                 sigma_black = np.multiply(pi_black, beta_black)
                 ##
                 ####################################
-                plot(beta_black, pi_black, sigma_black)
+                # plot(beta_black, pi_black, sigma_black)
                 tup = (st_1, at_1, sigma_black[np.argmin(sigma_black)] * (40 - 2 * no_eat_round) / 40, st, done)
                 Mrl.update(tup=tup, camp=camp_black)
                 action = np.argmin(sigma_black)
