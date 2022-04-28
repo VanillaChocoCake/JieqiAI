@@ -45,7 +45,7 @@ while True:
         ##################################################################
         # ct = 0 的情况，即episode terminated，困毙的局直接更新缓存，就不训练了 #
         ##################################################################
-        if (game_round / 2 >= 500 or no_eat_round >= 40) and done == not_end:
+        if (game_round / 2 >= 500 or no_eat_round >= 30) and done == not_end:
             decision = "end"
             print("回合过多")
             done = end
@@ -85,22 +85,18 @@ while True:
         if done == not_end and game_round > 1:
             # 将棋盘转换为10 * 9 * 16
             if turn == camp_red:
-                beta_red = reinforcement_learning(Mrl=Mrl, camp=camp_red, dqn_agent=red_agent, st=st, actions=red_actions, batch_size=8)
+                beta_red = reinforcement_learning(Mrl=Mrl, camp=camp_red, dqn_agent=red_agent, st=st, actions=red_actions, batch_size=1)
                 # 不知道为什么将train写在supervised_learning里面的时候模型会不训练，因此拿出来了
                 # 因为save_count会根据存储次数而增加，当save_count为0的时候意味着已经增加了save_rate个元组
                 # 为了避免过拟合，因此在此时进行训练一次
                 if Msl.red.save_count == 0:
                     red_sl_model.train(Msl.red.st, Msl.red.at)
+                    Msl.red.save_count += 1
                 pi_red = supervised_learning(camp=camp_red, sl_model=red_sl_model, st=st, actions=red_actions)
-                # sigma_red = (1 - eta) * pi_red + eta * beta_red
-                ####################################
-                ##
-                sigma_red = np.multiply(pi_red, beta_red)
-                ##
-                ####################################
+                sigma_red = (1 - eta) * pi_red + eta * beta_red
                 # plot(beta_red, pi_red, sigma_red)
                 # sigma dim=8100
-                tup = (st_1, at_1, sigma_red[np.argmax(sigma_red)] * (40 - 2 * no_eat_round) / 40, st, done)
+                tup = (st_1, at_1, sigma_red[np.argmax(sigma_red)] * (30 - 2 * no_eat_round) / 30, st, done)
                 Mrl.update(tup=tup, camp=camp_red)
                 action = np.argmax(sigma_red)
                 # action 0 ~ 8099
@@ -118,18 +114,14 @@ while True:
                       f'decision : {decision}\n')
                 # decision string "a b c d"
             else:
-                beta_black = reinforcement_learning(Mrl=Mrl, camp=camp_black, dqn_agent=black_agent, st=st, actions=black_actions, batch_size=8)
+                beta_black = reinforcement_learning(Mrl=Mrl, camp=camp_black, dqn_agent=black_agent, st=st, actions=black_actions, batch_size=1)
                 if Msl.black.save_count == 0:
                     black_sl_model.train(Msl.black.st, Msl.black.at)
+                    Msl.black.save_count += 1
                 pi_black = supervised_learning(camp=camp_black, sl_model=black_sl_model, st=st, actions=black_actions)
-                # sigma_black = (1 - eta) * pi_black + eta * beta_black
-                ####################################
-                ##
-                sigma_black = np.multiply(pi_black, beta_black)
-                ##
-                ####################################
+                sigma_black = -(1 - eta) * pi_black + eta * beta_black
                 # plot(beta_black, pi_black, sigma_black)
-                tup = (st_1, at_1, sigma_black[np.argmin(sigma_black)] * (40 - 2 * no_eat_round) / 40, st, done)
+                tup = (st_1, at_1, sigma_black[np.argmin(sigma_black)] * (30 - 2 * no_eat_round) / 30, st, done)
                 Mrl.update(tup=tup, camp=camp_black)
                 action = np.argmin(sigma_black)
                 at = convert_num_to_array(action)
