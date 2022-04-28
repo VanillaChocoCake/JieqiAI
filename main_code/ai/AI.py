@@ -91,12 +91,17 @@ while True:
                 # 为了避免过拟合，因此在此时进行训练一次
                 if Msl.red.save_count == 0:
                     red_sl_model.train(Msl.red.st, Msl.red.at)
+                    red_sl_model.save()
                 pi_red = supervised_learning(camp=camp_red, sl_model=red_sl_model, st=st, actions=red_actions)
-                sigma_red = (1 - eta) * pi_red + eta * beta_red
+                # sigma_red = (1 - eta) * pi_red + eta * beta_red
+                ####################################
+                ##
+                sigma_red = np.multiply(pi_red, beta_red)
+                ##
+                ####################################
                 plot(beta_red, pi_red, sigma_red)
                 # sigma dim=8100
                 tup = (st_1, at_1, sigma_red[np.argmax(sigma_red)] * (40 - 2 * no_eat_round) / 40, st, done)
-                # tup = (st_1, at_1, sigma_red[np.argmax(sigma_red)], st, done)
                 Mrl.update(tup=tup, camp=camp_red)
                 action = np.argmax(sigma_red)
                 # action 0 ~ 8099
@@ -107,13 +112,24 @@ while True:
                     tup = (st, at)
                     Msl.update(tup=tup, camp=camp_red)
                 decision = convert_num_to_action(action)
+                print(f'red: '
+                      f'pi max = {np.argmax(pi_red)}, {pi_red[np.argmax(pi_red)]};\n'
+                      f'beta max = {np.argmax(beta_red)}, {beta_red[np.argmax(beta_red)]};\n'
+                      f'sigma max = {np.argmax(sigma_red)}, {sigma_red[np.argmax(sigma_red)]};\n'
+                      f'decision : {decision}\n')
                 # decision string "a b c d"
             else:
                 beta_black = reinforcement_learning(Mrl=Mrl, camp=camp_black, dqn_agent=black_agent, st=st, actions=black_actions)
                 if Msl.black.save_count == 0:
                     black_sl_model.train(Msl.black.st, Msl.black.at)
+                    black_sl_model.save()
                 pi_black = supervised_learning(camp=camp_black, sl_model=black_sl_model, st=st, actions=black_actions)
-                sigma_black = (1 - eta) * pi_black + eta * beta_black
+                # sigma_black = (1 - eta) * pi_black + eta * beta_black
+                ####################################
+                ##
+                sigma_black = np.multiply(pi_black, beta_black)
+                ##
+                ####################################
                 plot(beta_black, pi_black, sigma_black)
                 tup = (st_1, at_1, sigma_black[np.argmin(sigma_black)] * (40 - 2 * no_eat_round) / 40, st, done)
                 Mrl.update(tup=tup, camp=camp_black)
@@ -123,6 +139,11 @@ while True:
                     tup = (st, at)
                     Msl.update(tup=tup, camp=camp_black)
                 decision = convert_num_to_action(action)
+                print(f'black: '
+                      f'pi min = {np.argmin(pi_black)}, {pi_black[np.argmin(pi_black)]};\n'
+                      f'beta min = {np.argmin(beta_black)}, {beta_black[np.argmin(beta_black)]};\n'
+                      f'sigma min = {np.argmin(sigma_black)}, {sigma_black[np.argmin(sigma_black)]};\n'
+                      f'decision : {decision}\n')
         if done == not_end and game_round == 1 and turn == camp_red:
             at = random_action(actions=red_actions)
             decision = convert_num_to_action(np.argmax(at))

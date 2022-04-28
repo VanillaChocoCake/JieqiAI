@@ -415,19 +415,19 @@ def available_actions(board):
     red_king_move = []
     black_king_move = []
     for action in red_actions:
-        if action[4] == "帅":
+        if board[action[0]][action[1]] == "帅":
             red_king_move.append(action)
     for action in black_actions:
-        if action[4] == "将":
+        if board[action[0]][action[1]] == "将":
             black_king_move.append(action)
     for move in red_king_move:
         for action in black_actions:
-            if [action[2], action[3]] == [move[2], move[3]] and action[4].find("炮") < 0:
+            if [action[2], action[3]] == [move[2], move[3]] and board[action[0]][action[1]].find("炮") < 0:
                 red_actions.remove(move)
                 break
     for move in black_king_move:
         for action in red_actions:
-            if [action[2], action[3]] == [move[2], move[3]] and action[4].find("炮") < 0:
+            if [action[2], action[3]] == [move[2], move[3]] and board[action[0]][action[1]].find("炮") < 0:
                 black_actions.remove(move)
                 break
     ######################################################
@@ -574,7 +574,7 @@ def convert_num_to_action(num):
     return str(src[0]) + " " + str(src[1]) + " " + str(dst[0]) + " " + str(dst[1])
 
 
-def generate_policy(predict_res, available_actions, camp):
+def generate_policy(predict_res, available_actions):
     """
     将输出结果中的不可行行动排除，随后进行归一化
     :param predict_res:模型输出的结果，8100维
@@ -582,19 +582,16 @@ def generate_policy(predict_res, available_actions, camp):
     :return:8100维数列
     """
     res = np.multiply(predict_res, available_actions)
-    pos_sum = (sum(res) + sum(abs(res))) / 2
+    for i in range(0, len(res)):
+        if abs(res[i]) <= 1e-5:
+            res[i] = 0
+    """pos_sum = (sum(res) + sum(abs(res))) / 2
     neg_sum_abs = abs(sum(res) - pos_sum)
     for i in range(0, len(res)):
         if res[i] > 1e-6:
             res[i] = res[i] / pos_sum
         elif res[i] < -1e-6:
-            res[i] = res[i] / neg_sum_abs
-    for i in range(0, 10):
-        for j in range(0, 9):
-            if camp == camp_red:
-                res[90 * (9 * i + j) + 9 * i + j] = -2
-            else:
-                res[90 * (9 * i + j) + 9 * i + j] = 2
+            res[i] = res[i] / neg_sum_abs"""
     return res
 
 
@@ -642,4 +639,9 @@ def plot(beta, pi, sigma):
     plt.plot(x, pi)
     plt.subplot(3, 1, 3)
     plt.plot(x, sigma)
+    plt.show()
+
+def single_plot(arr):
+    x = np.arange(len(arr))
+    plt.plot(x, arr)
     plt.show()
