@@ -59,7 +59,7 @@ class SLModel:
     def train(self, st, at, epochs=1):
         if len(st) == 0:
             return None
-        self.model.fit(st, at, epochs=epochs)
+        self.model.fit(st, at, epochs=epochs, verbose=0)
         self.save_count += 1
         if self.save_count > self.save_rate:
             self.save_count = 0

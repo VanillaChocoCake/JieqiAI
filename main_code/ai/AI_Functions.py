@@ -531,11 +531,9 @@ def available_actions(board):
     red_actions_modified = []
     black_actions_modified = []
     for action in red_temp:
-        red_actions_modified.append(
-            [action[0], action[1], action[2], action[3], Chess_Dic[board[action[0]][action[1]]]])
+        red_actions_modified.append([action[0], action[1], action[2], action[3]])
     for action in black_temp:
-        black_actions_modified.append(
-            [action[0], action[1], action[2], action[3], Chess_Dic[board[action[0]][action[1]]]])
+        black_actions_modified.append([action[0], action[1], action[2], action[3]])
     return red_actions_modified, black_actions_modified
 
 

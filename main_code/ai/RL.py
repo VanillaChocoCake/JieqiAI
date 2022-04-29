@@ -75,7 +75,8 @@ class DQN:
             target_prediction[0][np.argmax(at_prev)] = target
             self.model.fit(np.reshape(st_prev, (1, 10, 9, 16)),
                            np.reshape(target_prediction, (1, 8100)),
-                           epochs=1)
+                           epochs=1,
+                           verbose=0)
         self.update_count += 1
         self.save_count += 1
         if self.update_count > self.update_rate:
@@ -114,8 +115,10 @@ def reinforcement_learning(Mrl, camp, dqn_agent, st, actions, batch_size=128):
     return: dim=8100
     """
     if camp == camp_red and len(Mrl.red.rlmemory) > batch_size:
+        print("强化学习中...")
         dqn_agent.train(Mrl, batch_size=batch_size)
     elif camp == camp_black and len(Mrl.black.rlmemory) > batch_size:
+        print("强化学习中...")
         dqn_agent.train(Mrl, batch_size=batch_size)
     random_policy = random_action(actions=actions)
     st = np.array([st])

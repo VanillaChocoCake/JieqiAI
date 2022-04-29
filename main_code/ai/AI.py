@@ -87,11 +87,12 @@ while True:
         if done == not_end and game_round > 1:
             # 将棋盘转换为10 * 9 * 16
             if turn == camp_red:
-                beta_red = reinforcement_learning(Mrl=Mrl, camp=camp_red, dqn_agent=red_agent, st=st, actions=red_actions, batch_size=1)
+                beta_red = reinforcement_learning(Mrl=Mrl, camp=camp_red, dqn_agent=red_agent, st=st, actions=red_actions)
                 # 不知道为什么将train写在supervised_learning里面的时候模型会不训练，因此拿出来了
                 # 因为save_count会根据存储次数而增加，当save_count为0的时候意味着已经增加了save_rate个元组
                 # 为了避免过拟合，因此在此时进行训练一次
                 if Msl.red.save_count == 0:
+                    print("监督学习中...")
                     red_sl_model.train(Msl.red.st, Msl.red.at)
                     Msl.red.save_count += 1
                 pi_red = supervised_learning(camp=camp_red, sl_model=red_sl_model, st=st, actions=red_actions)
@@ -102,7 +103,7 @@ while True:
                 # action 0 ~ 8099
                 available_policy = np.zeros(8100)
                 available_policy = convert_action_to_array(red_actions, available_policy)
-                if available_policy[action] == 0:
+                if available_policy[action] < 1:
                     action = np.argmax(convert_action_to_array(random.sample(red_actions, 1)[0]))
                 tup = (st_1, at_1, sigma_red[action] * (30 - 2 * no_eat_round) / 30, st, done)
                 Mrl.update(tup=tup, camp=camp_red)
@@ -114,14 +115,16 @@ while True:
                     Msl.update(tup=tup, camp=camp_red)
                 decision = convert_num_to_action(action)
                 print(f'red: \n'
+                      f'red actions : {red_actions};\n'
                       f'pi max = {np.argmax(pi_red)}, {pi_red[np.argmax(pi_red)]};\n'
                       f'beta max = {np.argmax(beta_red)}, {beta_red[np.argmax(beta_red)]};\n'
                       f'sigma max = {np.argmax(sigma_red)}, {sigma_red[np.argmax(sigma_red)]};\n'
                       f'decision : {decision}\n')
                 # decision string "a b c d"
             else:
-                beta_black = reinforcement_learning(Mrl=Mrl, camp=camp_black, dqn_agent=black_agent, st=st, actions=black_actions, batch_size=1)
+                beta_black = reinforcement_learning(Mrl=Mrl, camp=camp_black, dqn_agent=black_agent, st=st, actions=black_actions)
                 if Msl.black.save_count == 0:
+                    print("监督学习中...")
                     black_sl_model.train(Msl.black.st, Msl.black.at)
                     Msl.black.save_count += 1
                 pi_black = supervised_learning(camp=camp_black, sl_model=black_sl_model, st=st, actions=black_actions)
@@ -130,8 +133,8 @@ while True:
                 action = np.argmin(sigma_black)
                 available_policy = np.zeros(8100)
                 available_policy = convert_action_to_array(black_actions, available_policy)
-                if available_policy[action] == 0:
-                    action = np.argmax(convert_action_to_array(random.sample(red_actions, 1)[0]))
+                if available_policy[action] < 1:
+                    action = np.argmax(convert_action_to_array(random.sample(black_actions, 1)[0]))
                 tup = (st_1, at_1, sigma_black[action] * (30 - 2 * no_eat_round) / 30, st, done)
                 Mrl.update(tup=tup, camp=camp_black)
                 at = convert_num_to_array(action)
@@ -140,6 +143,7 @@ while True:
                     Msl.update(tup=tup, camp=camp_black)
                 decision = convert_num_to_action(action)
                 print(f'black: \n'
+                      f'black actions : {black_actions};\n'
                       f'pi max = {np.argmax(pi_black)}, {pi_black[np.argmax(pi_black)]};\n'
                       f'beta min = {np.argmin(beta_black)}, {beta_black[np.argmin(beta_black)]};\n'
                       f'sigma min = {np.argmin(sigma_black)}, {sigma_black[np.argmin(sigma_black)]};\n'
