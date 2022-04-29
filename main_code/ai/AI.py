@@ -1,10 +1,12 @@
 # 客户端
 # AI主程序
+import random
 import socket
 from CircularBuffer import CircularBuffer
 from RL import *
 from Reservoir import Reservoir
 from SL import *
+from AI_Functions import *
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect((host, port))
@@ -96,10 +98,14 @@ while True:
                 sigma_red = (1 - eta) * pi_red + eta * beta_red
                 # plot(beta_red, pi_red, sigma_red)
                 # sigma dim=8100
-                tup = (st_1, at_1, sigma_red[np.argmax(sigma_red)] * (30 - 2 * no_eat_round) / 30, st, done)
-                Mrl.update(tup=tup, camp=camp_red)
                 action = np.argmax(sigma_red)
                 # action 0 ~ 8099
+                available_policy = np.zeros(8100)
+                available_policy = convert_action_to_array(red_actions, available_policy)
+                if available_policy[action] == 0:
+                    action = np.argmax(convert_action_to_array(random.sample(red_actions, 1)[0]))
+                tup = (st_1, at_1, sigma_red[action] * (30 - 2 * no_eat_round) / 30, st, done)
+                Mrl.update(tup=tup, camp=camp_red)
                 at = convert_num_to_array(action)
                 # at dim=8100
                 if action == np.argmax(beta_red):
@@ -121,9 +127,13 @@ while True:
                 pi_black = supervised_learning(camp=camp_black, sl_model=black_sl_model, st=st, actions=black_actions)
                 sigma_black = -(1 - eta) * pi_black + eta * beta_black
                 # plot(beta_black, pi_black, sigma_black)
-                tup = (st_1, at_1, sigma_black[np.argmin(sigma_black)] * (30 - 2 * no_eat_round) / 30, st, done)
-                Mrl.update(tup=tup, camp=camp_black)
                 action = np.argmin(sigma_black)
+                available_policy = np.zeros(8100)
+                available_policy = convert_action_to_array(black_actions, available_policy)
+                if available_policy[action] == 0:
+                    action = np.argmax(convert_action_to_array(random.sample(red_actions, 1)[0]))
+                tup = (st_1, at_1, sigma_black[action] * (30 - 2 * no_eat_round) / 30, st, done)
+                Mrl.update(tup=tup, camp=camp_black)
                 at = convert_num_to_array(action)
                 if action == np.argmin(beta_black):
                     tup = (st, at)
