@@ -130,4 +130,7 @@ def reinforcement_learning(Mrl, camp, dqn_agent, st, actions, batch_size=128):
     if num > dqn_agent.epsilon:
         return beta
     else:
-        return random_policy
+        if camp == camp_red:
+            return random_policy
+        else:
+            return -random_policy

@@ -105,7 +105,7 @@ while True:
                 available_policy = convert_action_to_array(red_actions, available_policy)
                 if available_policy[action] < 1:
                     action = np.argmax(convert_action_to_array(random.sample(red_actions, 1)[0]))
-                tup = (st_1, at_1, sigma_red[action] * (30 - 2 * no_eat_round) / 30, st, done)
+                tup = (st_1, at_1, sigma_red[action], st, done)
                 Mrl.update(tup=tup, camp=camp_red)
                 at = convert_num_to_array(action)
                 # at dim=8100
@@ -135,7 +135,7 @@ while True:
                 available_policy = convert_action_to_array(black_actions, available_policy)
                 if available_policy[action] < 1:
                     action = np.argmax(convert_action_to_array(random.sample(black_actions, 1)[0]))
-                tup = (st_1, at_1, sigma_black[action] * (30 - 2 * no_eat_round) / 30, st, done)
+                tup = (st_1, at_1, sigma_black[action], st, done)
                 Mrl.update(tup=tup, camp=camp_black)
                 at = convert_num_to_array(action)
                 if action == np.argmin(beta_black):
