@@ -60,10 +60,7 @@ class SLModel:
         if len(st) == 0:
             return None
         self.model.fit(st, at, epochs=epochs, verbose=0)
-        self.save_count += 1
-        if self.save_count > self.save_rate:
-            self.save_count = 0
-            self.save()
+        self.save()
 
     def generate_figure(self):
         from tensorflow.keras.utils import plot_model

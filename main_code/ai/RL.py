@@ -40,7 +40,7 @@ class DQN:
             self.model = create_model(self.learning_rate)
         self.gamma = 1.0
         self.epsilon = 0.99
-        self.epsilon_min = 1e-6
+        self.epsilon_min = 00.2
         self.epsilon_decay = 0.999
         self.update_rate = 100
         self.update_count = 0
@@ -90,6 +90,8 @@ class DQN:
         action = self.model.predict(st)[0]
         if self.epsilon > self.epsilon_min:
             self.epsilon *= self.epsilon_decay
+        else:
+            self.epsilon = self.epsilon_min
         return action
 
     def update_target_model(self):
