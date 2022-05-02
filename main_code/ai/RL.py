@@ -40,8 +40,8 @@ class DQN:
             self.model = create_model(self.learning_rate)
         self.gamma = 1.0
         self.epsilon = 0.99
-        self.epsilon_min = 00.2
-        self.epsilon_decay = 0.999
+        self.epsilon_min = 0.2
+        self.epsilon_decay = 0.99
         self.update_rate = 100
         self.update_count = 0
         self.save_count = 0

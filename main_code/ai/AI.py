@@ -96,7 +96,8 @@ while True:
                     red_sl_model.train(Msl.red.st, Msl.red.at)
                     Msl.red.save_count += 1
                 pi_red = supervised_learning(camp=camp_red, sl_model=red_sl_model, st=st, actions=red_actions)
-                sigma_red = (1 - eta) * pi_red + eta * beta_red
+                normalized_beta_red = normalize_policy(beta_red)
+                sigma_red = (1 - eta) * pi_red + eta * normalized_beta_red
                 # plot(beta_red, pi_red, sigma_red)
                 # sigma dim=8100
                 action = np.argmax(sigma_red)
@@ -105,7 +106,7 @@ while True:
                 available_policy = convert_action_to_array(red_actions, available_policy)
                 if available_policy[action] < 1:
                     action = np.argmax(convert_action_to_array(random.sample(red_actions, 1)[0]))
-                tup = (st_1, at_1, sigma_red[action], st, done)
+                tup = (st_1, at_1, beta_red[action], st, done)
                 Mrl.update(tup=tup, camp=camp_red)
                 at = convert_num_to_array(action)
                 # at dim=8100
@@ -128,6 +129,7 @@ while True:
                     black_sl_model.train(Msl.black.st, Msl.black.at)
                     Msl.black.save_count += 1
                 pi_black = supervised_learning(camp=camp_black, sl_model=black_sl_model, st=st, actions=black_actions)
+                normalized_beta_black = normalize_policy(beta_black)
                 sigma_black = -(1 - eta) * pi_black + eta * beta_black
                 # plot(beta_black, pi_black, sigma_black)
                 action = np.argmin(sigma_black)
@@ -135,7 +137,7 @@ while True:
                 available_policy = convert_action_to_array(black_actions, available_policy)
                 if available_policy[action] < 1:
                     action = np.argmax(convert_action_to_array(random.sample(black_actions, 1)[0]))
-                tup = (st_1, at_1, sigma_black[action], st, done)
+                tup = (st_1, at_1, beta_black[action], st, done)
                 Mrl.update(tup=tup, camp=camp_black)
                 at = convert_num_to_array(action)
                 if action == np.argmin(beta_black):

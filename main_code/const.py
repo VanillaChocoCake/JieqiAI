@@ -17,7 +17,7 @@ red_win = 1
 black_win = -1
 draw = 0
 
-eta = 0.08
+eta = 0.6
 
 end = 0
 not_end = 1

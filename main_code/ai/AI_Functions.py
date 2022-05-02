@@ -169,7 +169,7 @@ def all_actions(board):
                             res.append([x, y, x + 1, y + 1])
                 else:
                     if x == 0 and y == 3 and camp(board[1][4]) != camp(chess):
-                        res.append([0, 3, 1,  4])
+                        res.append([0, 3, 1, 4])
                     elif x == 0 and y == 5 and camp(board[1][4]) != camp(chess):
                         res.append([0, 5, 1, 4])
                     elif x == 9 and y == 3 and camp(board[8][4]) != camp(chess):
@@ -639,7 +639,26 @@ def plot(beta, pi, sigma):
     plt.plot(x, sigma)
     plt.show()
 
+
 def single_plot(arr):
     x = np.arange(len(arr))
     plt.plot(x, arr)
     plt.show()
+
+
+def normalize_policy(arr):
+    _sum_positive = 0
+    _sum_negative = 0
+    res = copy.deepcopy(arr)
+    for i in range(0, len(res)):
+        if res[i] > 0:
+            _sum_positive += res[i]
+        elif res[i] < 0:
+            _sum_negative += res[i]
+    _sum_negative = abs(_sum_negative)
+    for i in range(0, len(res)):
+        if res[i] > 0:
+            res[i] = res[i] / _sum_positive
+        elif res[i] < 0:
+            res[i] = res[i] / _sum_negative
+    return res

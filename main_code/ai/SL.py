@@ -96,6 +96,7 @@ def supervised_learning(camp, sl_model, st, actions):
     available_policy = np.zeros(8100)
     available_policy = convert_action_to_array(actions, available_policy)
     average_policy = generate_policy(average_policy, available_policy)
+    average_policy = normalize_policy(average_policy)
     """if camp == camp_red:
         return average_policy
     else:
