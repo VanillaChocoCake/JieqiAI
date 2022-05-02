@@ -26,12 +26,12 @@ def create_model(learning_rate):
     visible = Input(shape=(10, 9, 16))
     x = residual_module(visible, 1024)
     maxpooling_x = MaxPooling2D()(x)
-    y = residual_module(maxpooling_x, 512)
-    maxpooling_y = MaxPooling2D()(y)
-    z = Dense(1024, activation="relu")(maxpooling_y)
+    """y = residual_module(maxpooling_x, 512)
+    maxpooling_y = MaxPooling2D()(y)"""
+    z = Dense(1024, activation="relu")(maxpooling_x)
     flatten = Flatten()(z)
-    final = Dense(512, activation="relu")(flatten)
-    action = Dense(8100, activation="softmax")(final)
+    # final = Dense(512, activation="relu")(flatten)
+    action = Dense(8100, activation="softmax")(flatten)
     model = Model(inputs=visible, outputs=action)
     sgd = optimizers.SGD(learning_rate=learning_rate)
     model.compile(optimizer=sgd, loss='binary_crossentropy')
@@ -39,7 +39,7 @@ def create_model(learning_rate):
 
 
 class SLModel:
-    def __init__(self, camp, learning_rate=0.005):
+    def __init__(self, camp=camp_red, learning_rate=0.005):
         self.learning_rate = learning_rate
         self.camp = camp
         self.save_count = 0
@@ -64,7 +64,7 @@ class SLModel:
 
     def generate_figure(self):
         from tensorflow.keras.utils import plot_model
-        plot_model(self.model, to_file=f'model_{localtime()}.png')
+        plot_model(self.model, to_file=f'sl_model_pic.png')
 
     def save(self):
         if self.camp == camp_red:

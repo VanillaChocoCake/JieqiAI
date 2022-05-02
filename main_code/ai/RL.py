@@ -16,10 +16,10 @@ def create_model(learning_rate=0.1):
     model.add(Input(shape=(10, 9, 16)))
     model.add(Conv2D(1024, 1, activation="relu"))
     model.add(MaxPooling2D())
-    model.add(Conv2D(512, 1, activation="relu"))
-    model.add(Dense(1024, activation="relu"))
+    """model.add(Conv2D(512, 1, activation="relu"))
+    model.add(Dense(1024, activation="relu"))"""
     model.add(Flatten())
-    model.add(Dense(512, activation="relu"))
+    # model.add(Dense(512, activation="relu"))
     model.add(Dense(8100, activation="tanh"))
     sgd = optimizers.SGD(learning_rate=learning_rate)
     # model.compile(optimizer=sgd, loss='binary_crossentropy')
@@ -28,7 +28,7 @@ def create_model(learning_rate=0.1):
 
 
 class DQN:
-    def __init__(self, camp, learning_rate=0.1):
+    def __init__(self, camp=camp_red, learning_rate=0.1):
         self.learning_rate = learning_rate
         self.camp = camp
         try:
@@ -96,6 +96,10 @@ class DQN:
 
     def update_target_model(self):
         self.target_model.set_weights(self.model.get_weights())
+
+    def generate_figure(self):
+        from tensorflow.keras.utils import plot_model
+        plot_model(self.model, to_file=f'rl_model_pic.png')
 
     def save(self):
         if self.camp == camp_red:
