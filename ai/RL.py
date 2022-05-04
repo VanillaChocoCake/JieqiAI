@@ -7,7 +7,7 @@ from tensorflow.keras.layers import Input
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.models import load_model
 
-from AI_Functions import *
+from ai.AI_Functions import *
 from localtime import localtime
 
 
@@ -16,10 +16,10 @@ def create_model(learning_rate=0.1):
     model.add(Input(shape=(10, 9, 16)))
     model.add(Conv2D(1024, 1, activation="relu"))
     model.add(MaxPooling2D())
-    """model.add(Conv2D(512, 1, activation="relu"))
-    model.add(Dense(1024, activation="relu"))"""
+    model.add(Conv2D(512, 1, activation="relu"))
     model.add(Flatten())
     # model.add(Dense(512, activation="relu"))
+    # model.add(Dense(8192, activation="relu"))
     model.add(Dense(8100, activation="tanh"))
     sgd = optimizers.SGD(learning_rate=learning_rate)
     # model.compile(optimizer=sgd, loss='binary_crossentropy')

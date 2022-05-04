@@ -22,6 +22,7 @@ while True:
     chess_num_now = chess_num_prev = 0
     no_eat_round = 0
     done = not_end
+    red_agent.epsilon = black_agent.epsilon = 0.7
     while True:
         decision = None
         print("********************************")

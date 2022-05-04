@@ -8,7 +8,7 @@ from tensorflow.keras.layers import Input
 from tensorflow.keras.layers import add, BatchNormalization, Flatten
 from tensorflow.keras.models import load_model, Model
 
-from AI_Functions import *
+from ai.AI_Functions import *
 from localtime import localtime
 
 
@@ -29,8 +29,10 @@ def create_model(learning_rate):
     """y = residual_module(maxpooling_x, 512)
     maxpooling_y = MaxPooling2D()(y)"""
     z = Dense(1024, activation="relu")(maxpooling_x)
-    flatten = Flatten()(z)
+    m = Dense(512, activation="relu")(z)
+    flatten = Flatten()(m)
     # final = Dense(512, activation="relu")(flatten)
+    # final = Dense(8192, activation="relu")(flatten)
     action = Dense(8100, activation="softmax")(flatten)
     model = Model(inputs=visible, outputs=action)
     sgd = optimizers.SGD(learning_rate=learning_rate)
