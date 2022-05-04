@@ -7,27 +7,34 @@ from tensorflow.keras.layers import Conv2D, Dense, MaxPooling2D
 from tensorflow.keras.layers import Input
 from tensorflow.keras.layers import add, BatchNormalization, Flatten
 from tensorflow.keras.models import load_model, Model
+from tensorflow.keras import optimizers
+from tensorflow.keras.layers import Conv2D, Dense, MaxPooling2D, BatchNormalization
+from tensorflow.keras.layers import Flatten
+from tensorflow.keras.layers import Input
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.models import load_model
 
 from ai.AI_Functions import *
 from localtime import localtime
 
 
 def create_model(learning_rate):
+    model = Sequential()
+    """
     def residual_module(layer_in, n_filters):
         merge_input = layer_in
         if layer_in.shape[-1] != n_filters:
             merge_input = Conv2D(n_filters, (1, 1), padding='same', activation='relu')(layer_in)
         conv1 = Conv2D(n_filters, (1, 1), padding='same', activation='relu')(layer_in)
         batch_norm = BatchNormalization()(conv1)
-        layer_out = add([batch_norm, merge_input])
-        layer_out = Activation('relu')(layer_out)
+        # layer_out = add([batch_norm, merge_input])
+        layer_out = Activation('relu')(batch_norm)
         return layer_out
-
     visible = Input(shape=(10, 9, 16))
     x = residual_module(visible, 1024)
     maxpooling_x = MaxPooling2D()(x)
-    """y = residual_module(maxpooling_x, 512)
-    maxpooling_y = MaxPooling2D()(y)"""
+    y = residual_module(maxpooling_x, 512)
+    maxpooling_y = MaxPooling2D()(y)
     z = Dense(1024, activation="relu")(maxpooling_x)
     m = Dense(512, activation="relu")(z)
     flatten = Flatten()(m)
@@ -35,6 +42,21 @@ def create_model(learning_rate):
     # final = Dense(8192, activation="relu")(flatten)
     action = Dense(8100, activation="softmax")(flatten)
     model = Model(inputs=visible, outputs=action)
+    sgd = optimizers.SGD(learning_rate=learning_rate)
+    """
+    model.add(Input(shape=(10, 9, 16)))
+    model.add(Conv2D(512, 1, activation="relu"))
+    model.add(BatchNormalization())
+    model.add(MaxPooling2D())
+    """
+    model.add(Conv2D(1024, 1, activation="relu"))
+    model.add(BatchNormalization())
+    model.add(MaxPooling2D())
+    """
+    model.add(Flatten())
+    # model.add(Dense(512, activation="relu"))
+    # model.add(Dense(8192, activation="relu"))
+    model.add(Dense(8100, activation="softmax"))
     sgd = optimizers.SGD(learning_rate=learning_rate)
     model.compile(optimizer=sgd, loss='binary_crossentropy')
     return model

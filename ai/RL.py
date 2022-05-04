@@ -1,7 +1,7 @@
 import os
 
 from tensorflow.keras import optimizers
-from tensorflow.keras.layers import Conv2D, Dense, MaxPooling2D
+from tensorflow.keras.layers import Conv2D, Dense, MaxPooling2D, BatchNormalization
 from tensorflow.keras.layers import Flatten
 from tensorflow.keras.layers import Input
 from tensorflow.keras.models import Sequential
@@ -14,9 +14,14 @@ from localtime import localtime
 def create_model(learning_rate=0.1):
     model = Sequential()
     model.add(Input(shape=(10, 9, 16)))
-    model.add(Conv2D(1024, 1, activation="relu"))
-    model.add(MaxPooling2D())
     model.add(Conv2D(512, 1, activation="relu"))
+    model.add(BatchNormalization())
+    model.add(MaxPooling2D())
+    """
+    model.add(Conv2D(1024, 1, activation="relu"))
+    model.add(BatchNormalization())
+    model.add(MaxPooling2D())
+    """
     model.add(Flatten())
     # model.add(Dense(512, activation="relu"))
     # model.add(Dense(8192, activation="relu"))
