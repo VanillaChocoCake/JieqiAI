@@ -1,7 +1,7 @@
 # 基本上所有AI的函数都在这里面，有时间再写到class里
 import copy
 import numpy as np
-from main_code.const import *
+from const import *
 import random
 import matplotlib.pyplot as plt
 

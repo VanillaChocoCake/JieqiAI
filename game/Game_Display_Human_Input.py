@@ -1,7 +1,6 @@
 import socket
-from main_code.ai.AI_Functions import *
-from main_code.game.Game_Functions import *
-from main_code.localtime import localtime
+from game.Game_Functions import *
+from localtime import localtime
 
 Red_Dic = {'1': "红车",
            '2': "红炮",

@@ -1,10 +1,10 @@
 # Msl-蓄水池 (st,at)
 import os
 import pickle
-from main_code.localtime import *
+from localtime import *
 import random
 import numpy as np
-from main_code.const import *
+from const import *
 
 
 class Red:
