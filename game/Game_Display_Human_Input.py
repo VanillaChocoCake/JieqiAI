@@ -1,5 +1,5 @@
 import socket
-from game.Game_Functions import *
+from Game_Functions import *
 from localtime import localtime
 from const import *
 import copy
