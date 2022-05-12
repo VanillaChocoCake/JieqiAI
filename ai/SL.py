@@ -42,10 +42,10 @@ class SLModel:
         action = self.model.predict(st)[0]
         return action
 
-    def train(self, st, at, epochs=1):
+    def train(self, st, at, epochs=2):
         if len(st) == 0:
             return None
-        self.model.fit(st, at, epochs=epochs, verbose=0)
+        self.model.fit(st, at, epochs=epochs, batch_size=128)
         self.save()
 
     def generate_figure(self):

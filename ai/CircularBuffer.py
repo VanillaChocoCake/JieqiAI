@@ -1,5 +1,4 @@
 # Mrl-环形缓存
-# 可能用不到了
 import copy
 import os
 import pickle

@@ -1,6 +1,8 @@
 import socket
 from game.Game_Functions import *
 from localtime import localtime
+from const import *
+import copy
 
 Red_Dic = {'1': "红车",
            '2': "红炮",

@@ -37,8 +37,8 @@ class DQN:
         except:
             self.model = create_model(self.learning_rate)
         self.gamma = 1.0
-        self.epsilon = 0.99
-        self.epsilon_min = 0.2
+        self.epsilon = 0.7
+        self.epsilon_min = 0.1
         self.epsilon_decay = 0.99
         self.update_rate = 100
         self.update_count = 0
@@ -73,7 +73,7 @@ class DQN:
             target_prediction[0][np.argmax(at_prev)] = target
             self.model.fit(np.reshape(st_prev, (1, 10, 9, 16)),
                            np.reshape(target_prediction, (1, 8100)),
-                           epochs=1,
+                           epochs=2,
                            verbose=0)
         self.update_count += 1
         self.save_count += 1
@@ -118,12 +118,31 @@ def reinforcement_learning(Mrl, camp, dqn_agent, st, actions, batch_size=128):
     """
     return: dim=8100
     """
-    if camp == camp_red and len(Mrl.red.rlmemory) > batch_size:
+    if camp == camp_red and len(Mrl.red.rlmemory) > batch_size and Mrl.red.save_count == 0:
         print("强化学习中...")
         dqn_agent.train(Mrl, batch_size=batch_size)
-    elif camp == camp_black and len(Mrl.black.rlmemory) > batch_size:
+    elif camp == camp_black and len(Mrl.black.rlmemory) > batch_size and Mrl.black.save_count == 0:
         print("强化学习中...")
         dqn_agent.train(Mrl, batch_size=batch_size)
+    random_policy = random_action(actions=actions)
+    st = np.array([st])
+    best_policy = dqn_agent.predict(st)
+    available_policy = np.zeros(8100)
+    available_policy = convert_action_to_array(actions, available_policy)
+    beta = generate_policy(best_policy, available_policy)
+    num = random.uniform(0, 1)
+    if num > dqn_agent.epsilon:
+        return beta
+    else:
+        if camp == camp_red:
+            return random_policy
+        else:
+            return -random_policy
+
+def rl(camp, dqn_agent, st, actions):
+    """
+    return: dim=8100
+    """
     random_policy = random_action(actions=actions)
     st = np.array([st])
     best_policy = dqn_agent.predict(st)
