@@ -11,6 +11,7 @@ from localtime import localtime
 
 def create_model(learning_rate=0.1):
     model = Sequential()
+    # 这个输入不好，建议参考AlphaZero论文中的输入
     model.add(Input(shape=(10, 9, 16)))
     model.add(Conv2D(512, 1))
     model.add(Activation("relu"))
@@ -37,8 +38,8 @@ class DQN:
         except:
             self.model = create_model(self.learning_rate)
         self.gamma = 1.0
-        self.epsilon = 0.7
-        self.epsilon_min = 0.1
+        self.epsilon = 0.1
+        self.epsilon_min = 0.0001
         self.epsilon_decay = 0.99
         self.update_rate = 100
         self.update_count = 0

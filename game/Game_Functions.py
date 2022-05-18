@@ -97,8 +97,10 @@ def print_board(board, red_info, black_info):  # red_info与black_info指棋盘�
     print("*******************************")
     temp = []
     res = []
+    print("  零  一  二  三  四  五  六  七  八")
     for i in range(0, 10):
         line = board[i]
+        print(f'{i} ', end="")
         for j in range(0, 9):
             real_name = chess = line[j]
             if camp(chess) == 1 and red_info[chess] is False:

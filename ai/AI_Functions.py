@@ -629,15 +629,17 @@ def convert_num_to_array(num):
     return arr
 
 
-def plot(beta, pi, sigma):
+def plot(pi, beta, sigma):
     x = np.arange(len(beta))
-    plt.subplot(3, 1, 1)
-    plt.plot(x, beta)
-    plt.subplot(3, 1, 2)
     plt.plot(x, pi)
-    plt.subplot(3, 1, 3)
+    plt.savefig("pi.png")
+    plt.close()
+    plt.plot(x, beta)
+    plt.savefig("beta.png")
+    plt.close()
     plt.plot(x, sigma)
-    plt.show()
+    plt.savefig("sigma.png")
+    plt.close()
 
 
 def single_plot(arr):

@@ -10,6 +10,7 @@ from localtime import localtime
 
 def create_model(learning_rate):
     model = Sequential()
+    # 这个输入不好，建议参考AlphaZero论文中的输入
     model.add(Input(shape=(10, 9, 16)))
     model.add(Conv2D(512, 1))
     model.add(Activation("relu"))

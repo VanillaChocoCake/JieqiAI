@@ -102,7 +102,7 @@ while True:
                 human_decision = input("人类决策：").split(" ")
                 src = [9 - int(human_decision[0]), 8 - int(human_decision[1])]
                 dst = [9 - int(human_decision[2]), 8 - int(human_decision[3])]
-                print(f'从{src}到{dst}')
+                """print(f'从{src}到{dst}')"""
                 board = update_display_board(src, dst, board, camp_black)
                 if board[dst[0]][dst[1]] == "黑未":
                     for key in Black_Dic:

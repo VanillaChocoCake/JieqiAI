@@ -20,6 +20,16 @@ while True:
         board = translate_message(message)
         st = convert_board_to_array(board)
         red_actions, black_actions = available_actions(board)
+        if len(red_actions) == 0:
+            print("红方困毙")
+            decision = "end"
+            client.send(decision.encode("utf-8"))
+            break
+        elif len(black_actions) == 0:
+            print("黑方困毙")
+            decision = "end"
+            client.send(decision.encode("utf-8"))
+            break
         if side == camp_red:
             pi = supervised_learning(camp=camp_red, sl_model=red_sl_model, st=st, actions=red_actions)
             beta = rl(camp=camp_red, dqn_agent=red_agent, st=st, actions=red_actions)
